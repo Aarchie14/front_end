@@ -21,11 +21,14 @@ const App = () => {
 
   return (
     <motion.div
-  initial={{ opacity: 1, filter: "blur(0px)" }}
-  animate={{ opacity: fadeOut ? 0 : 1, filter: fadeOut ? "blur(10px)" : "blur(0px)" }}
-  transition={{ duration: 1, ease: "easeInOut" }} 
-  className="w-full min-h-screen flex items-center justify-center bg-white relative"
->
+      initial={{ opacity: 1, filter: "blur(0px)" }}
+      animate={{
+        opacity: fadeOut ? 0 : 1,
+        filter: fadeOut ? "blur(10px)" : "blur(0px)",
+      }}
+      transition={{ duration: 1, ease: "easeInOut" }}
+      className="w-full min-h-screen flex items-center justify-center bg-white relative"
+    >
       <img
         src={image}
         className="absolute inset-0 z-0 bg-cover size-full overflow-y-hidden"

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import image from "@/assets/imgs/halfbg.webp";
@@ -7,11 +8,32 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth(); // Get login function from AuthContext
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Simulate authentication (Replace with actual API call)
+    const success = await login(email, password);
+
+    if (success) {
+      navigate("/dashboard"); // Redirect to Dashboard after login
+    } else {
+      alert("Invalid credentials!");
+    }
+  };
+
   const [showPassword, setShowPassword] = useState(false);
+
   const [loading, setLoading] = useState(false);
+
+  console.log("Trying to log in with:", email, password);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -20,12 +42,9 @@ const LoginPage = () => {
     };
   }, []);
 
-  const handleLogin = () => {
+  const handleLoginClick = () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/dashboard"); // Redirect after "login"
-    }, 2000); // Simulate API call
+    setTimeout(() => setLoading(false), 1000);
   };
 
   return (
@@ -57,21 +76,31 @@ const LoginPage = () => {
             <div className="space-y-5">
               {/* Username Input */}
               <div className="space-y-2">
-                <label className="text-black text-base">Username</label>
+                <label className="text-black text-base">Enter Email</label>
                 <Input
                   className="h-[52px] bg-[#f4f2f2] rounded-lg w-full"
-                  placeholder="Enter username"
+                  placeholder="Enter email"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
 
               {/* Password Input */}
               <div className="space-y-2">
-                <label className="text-black text-base">Password</label>
+                <div className="flex justify-between">
+                  <label className="text-black text-base">Password</label>
+                  <button
+                    className="text-[#2d346b] text-sm hover:underline"
+                    onClick={() => navigate("/forgot-password")}
+                  >
+                    Forgot your password?
+                  </button>
+                </div>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
                     className="h-[52px] bg-[#f4f2f2] rounded-lg w-full pr-10"
                     placeholder="Enter password"
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   {showPassword ? (
                     <EyeOff
@@ -96,6 +125,21 @@ const LoginPage = () => {
                 {loading ? "Logging in..." : "Log In"}
               </Button>
 
+              <div className="flex items-center my-4">
+                <div className="flex-grow border-t border-gray-400"></div>
+                <span className="mx-3 text-gray-600">Or continue with</span>
+                <div className="flex-grow border-t border-gray-400"></div>
+              </div>
+
+              {/* Google Login Button */}
+              <Button
+                className="w-full flex items-center justify-center h-[50px] bg-white border border-gray-300 text-black rounded-lg shadow-md hover:bg-gray-100"
+                onClick={() => navigate("/gmail")}
+              >
+                <FcGoogle className="w-6 h-6 mr-1" />
+                Sign in with Google
+              </Button>
+
               {/* Signup Link */}
               <p className="text-center text-lg">
                 <span className="text-[#2d346b]">Don't have an account? </span>
@@ -114,7 +158,11 @@ const LoginPage = () => {
 
       {/* Right Section (Hidden on Mobile) */}
       <div className="hidden md:block w-2/3 h-full">
-        <img src={image} alt="Background" className="w-full h-full object-cover" />
+        <img
+          src={image}
+          alt="Background"
+          className="w-full h-full object-cover"
+        />
       </div>
     </motion.div>
   );

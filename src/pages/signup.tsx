@@ -69,29 +69,61 @@ const SignUpPage = () => {
 
             <div className="space-y-1">
               <label className="text-black text-base">Full Name</label>
-              <Input className="h-[50px] bg-[#f4f2f2] rounded-lg w-full" placeholder="Enter full name" />
+              <Input
+                className="h-[50px] bg-[#f4f2f2] rounded-lg w-full"
+                placeholder="Enter full name"
+              />
 
               <label className="text-black text-base">Email</label>
-              <Input className="h-[50px] bg-[#f4f2f2] rounded-lg w-full" placeholder="Enter email" value={email} onChange={handleEmailChange} />
-              {!emailValid && <p className="text-red-500 text-sm">Invalid email format</p>}
+              <Input
+                className="h-[50px] bg-[#f4f2f2] rounded-lg w-full"
+                placeholder="Enter email"
+                value={email}
+                onChange={handleEmailChange}
+              />
+              {!emailValid && (
+                <p className="text-red-500 text-sm">Invalid email format</p>
+              )}
 
               <label className="text-black text-base">Username</label>
-              <Input className="h-[50px] bg-[#f4f2f2] rounded-lg w-full" placeholder="Enter username" />
+              <Input
+                className="h-[50px] bg-[#f4f2f2] rounded-lg w-full"
+                placeholder="Enter username"
+              />
 
               <label className="text-black text-base">Password</label>
               <div className="relative">
-                <Input type={showPassword ? "text" : "password"} className="h-[50px] bg-[#f4f2f2] rounded-lg w-full" placeholder="Enter password" value={password} onChange={handlePasswordChange} />
-                <Eye className="absolute right-3 top-1/2 -translate-y-1/2 w-[22px] h-5 opacity-50 text-[#18345e] cursor-pointer" onClick={togglePasswordVisibility} />
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  className="h-[50px] bg-[#f4f2f2] rounded-lg w-full"
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+                <Eye
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-[22px] h-5 opacity-50 text-[#18345e] cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                />
               </div>
 
               <label className="text-black text-base">Confirm Password</label>
               <div className="relative">
-                <Input type={showPassword ? "text" : "password"} className="h-[50px] bg-[#f4f2f2] rounded-lg w-full" placeholder="Re-enter password" value={confirmPassword} onChange={handleConfirmPasswordChange} />
-                <Eye className="absolute right-3 top-1/2 -translate-y-1/2 w-[22px] h-5 opacity-50 text-[#18345e] cursor-pointer" onClick={togglePasswordVisibility} />
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  className="h-[50px] bg-[#f4f2f2] rounded-lg w-full"
+                  placeholder="Re-enter password"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                />
+                <Eye
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-[22px] h-5 opacity-50 text-[#18345e] cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                />
               </div>
               {!passwordMatch && (
                 <p className="text-red-500 text-sm flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" /> Passwords do not match
+                  <AlertCircle className="w-4 h-4 mr-1" /> Passwords do not
+                  match
                 </p>
               )}
 
@@ -100,9 +132,15 @@ const SignUpPage = () => {
               </Button>
 
               <p className="text-center text-lg">
-                <span className="text-[#2d346b]">Already have an account? </span>
-                <Button variant="link" className="text-[#2d346b] p-0" onClick={() => navigate("/login")}>
-                  Sign In
+                <span className="text-[#2d346b]">
+                  Already have an account?{" "}
+                </span>
+                <Button
+                  variant="link"
+                  className="text-[#2d346b] p-0"
+                  onClick={() => navigate("/login")}
+                >
+                  Log In
                 </Button>
               </p>
             </div>
@@ -111,7 +149,11 @@ const SignUpPage = () => {
       </Card>
 
       <div className="hidden md:block w-2/3 h-full">
-        <img src={image} alt="Background" className="w-full h-full object-cover" />
+        <img
+          src={image}
+          alt="Background"
+          className="w-full h-full object-cover"
+        />
       </div>
     </motion.div>
   );

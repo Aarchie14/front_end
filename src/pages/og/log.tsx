@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import image from "@/assets/imgs/halfbg.webp";
@@ -6,10 +6,12 @@ import logo from "@/assets/imgs/Financelogo.webp";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Eye } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -18,6 +20,14 @@ const LoginPage = () => {
     };
   }, []);
 
+  const handleLogin = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/dashboard"); // Redirect after "login"
+    }, 2000); // Simulate API call
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, filter: "blur(10px)", scale: 0.95 }}
@@ -25,9 +35,8 @@ const LoginPage = () => {
       transition={{ duration: 1, ease: "easeOut" }}
       className="bg-[#f8f9fa] flex flex-col md:flex-row w-full h-screen overflow-hidden"
     >
-      {/* Left Section (1/3 width on desktop, full width on mobile) */}
+      {/* Left Section (Login Form) */}
       <Card className="w-full md:w-1/3 bg-[#dce4f2] flex flex-col relative h-full md:shadow-lg">
-        {/* Background image overlay for mobile */}
         <div className="absolute inset-0 md:hidden">
           <img src={image} className="w-full h-full object-cover opacity-20" />
         </div>
@@ -39,7 +48,6 @@ const LoginPage = () => {
           </div>
 
           <div className="w-full max-w-[400px]">
-            {/* Welcome Title */}
             <div className="text-center mb-6">
               <h1 className="text-4xl sm:text-[55px] font-bold text-[#020202] tracking-wide">
                 WELCOME
@@ -61,17 +69,31 @@ const LoginPage = () => {
                 <label className="text-black text-base">Password</label>
                 <div className="relative">
                   <Input
-                    type="password"
-                    className="h-[52px] bg-[#f4f2f2] rounded-lg w-full"
+                    type={showPassword ? "text" : "password"}
+                    className="h-[52px] bg-[#f4f2f2] rounded-lg w-full pr-10"
                     placeholder="Enter password"
                   />
-                  <Eye className="absolute right-3 top-1/2 -translate-y-1/2 w-[25px] h-5 opacity-50 text-[#18345e]" />
+                  {showPassword ? (
+                    <EyeOff
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-[25px] h-5 opacity-50 text-[#18345e] cursor-pointer"
+                      onClick={() => setShowPassword(false)}
+                    />
+                  ) : (
+                    <Eye
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-[25px] h-5 opacity-50 text-[#18345e] cursor-pointer"
+                      onClick={() => setShowPassword(true)}
+                    />
+                  )}
                 </div>
               </div>
 
               {/* Login Button */}
-              <Button className="w-full h-[51px] bg-[#a9b5df] hover:bg-[#98a6d7] text-[#2d346b] text-lg shadow-lg rounded-lg">
-                Log In
+              <Button
+                className="w-full h-[51px] bg-[#a9b5df] hover:bg-[#98a6d7] text-[#2d346b] text-lg shadow-lg rounded-lg"
+                disabled={loading}
+                onClick={handleLogin}
+              >
+                {loading ? "Logging in..." : "Log In"}
               </Button>
 
               {/* Signup Link */}
@@ -90,7 +112,7 @@ const LoginPage = () => {
         </CardContent>
       </Card>
 
-      {/* Right Section (2/3 width on desktop, hides on mobile) */}
+      {/* Right Section (Hidden on Mobile) */}
       <div className="hidden md:block w-2/3 h-full">
         <img
           src={image}
