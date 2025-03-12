@@ -52,7 +52,7 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart";
 
-const Income = () => {
+const Expenses = () => {
   const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
     <div
       className={`group relative flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all ${
@@ -80,22 +80,22 @@ const Income = () => {
   const [incomeData, setIncomeData] = useState([
     {
       id: 1,
-      type: "Pay Check",
-      amount: 5000,
+      type: "Food",
+      amount: 1000,
       fill: "hsl(215, 100%, 50%)",
       color: "hsl(215, 100%, 50%)",
     },
     {
       id: 2,
-      type: "Business",
-      amount: 3000,
+      type: "Transportation",
+      amount: 200,
       fill: "hsl(0, 100%, 65%)",
       color: "hsl(0, 100%, 65%)",
     },
     {
       id: 3,
-      type: "Side Hustle",
-      amount: 1000,
+      type: "Groceries",
+      amount: 5000,
       fill: "hsl(135, 75%, 55%)",
       color: "hsl(135, 75%, 55%)",
     },
@@ -167,7 +167,7 @@ const Income = () => {
 
     const newSource = {
       id: newId,
-      type: "New Income Source",
+      type: "New Expenses Source",
       amount: 0,
       fill: newColor,
       color: newColor,
@@ -222,7 +222,7 @@ const Income = () => {
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
                   className="w-54 mb-2 text-black font-semibold bg-white"
-                  placeholder="Income source name"
+                  placeholder="Expense source name"
                 />
               </div>
               <div className="flex items-center justify-center mt-2">
@@ -348,8 +348,8 @@ const Income = () => {
         {/* Sidebar Navigation */}
         <nav className="mt-6 space-y-2">
           <NavItem icon={Home} label="Dashboard" isSidebarOpen={true} />
-          <NavItem icon={Wallet} label="Income" active isSidebarOpen={true} />
-          <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
+          <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
+          <NavItem icon={CreditCard} label="Expenses" active isSidebarOpen={true} />
           <NavItem icon={PiggyBank} label="Goals" isSidebarOpen={true} />
           <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
         </nav>
@@ -371,7 +371,7 @@ const Income = () => {
                 <Menu size={24} />
               </Button>
               <h1 className="text-base sm:text-lg md:text-xl font-bold">
-                Income Overview
+                Expenses Overview
               </h1>
             </div>
 
@@ -556,7 +556,7 @@ const Income = () => {
                 <CardHeader>
                   <CardTitle>Financial Overview</CardTitle>
                   <CardDescription>
-                    Breakdown of your income sources (Total:{" "}
+                    Breakdown of your expenses (Total:{" "}
                     {formatCurrency(totalIncome)})
                   </CardDescription>
                 </CardHeader>
@@ -588,13 +588,13 @@ const Income = () => {
                   ) : (
                     <div className="flex flex-col items-center justify-center h-64">
                       <p className="text-gray-500 mb-4">
-                        No income data to display
+                        No expenses data to display
                       </p>
                       <Button
                         className="bg-indigo-500 hover:bg-indigo-600 text-white"
                         onClick={addIncomeSource}
                       >
-                        Add Income Source
+                        Add Expenses 
                       </Button>
                     </div>
                   )}
@@ -622,7 +622,7 @@ const Income = () => {
                 <CardContent className="flex flex-1 flex-col items-center justify-center text-center">
                   <button className="mt-2 flex flex-col items-center text-gray-500 hover:text-indigo-700">
                     <Plus size={28} />
-                    <span className="mt-2 font-medium">Add Income Source</span>
+                    <span className="mt-2 font-medium">Add Expenses Source</span>
                   </button>
                 </CardContent>
               </Card>
@@ -642,4 +642,4 @@ const Income = () => {
   );
 };
 
-export default Income;
+export default Expenses;

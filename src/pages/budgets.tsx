@@ -11,17 +11,14 @@ import {
   Users,
   Target,
   Eye,
-  Settings,
-  Save,
 } from "lucide-react";
-import darkfont from "./assets/imgs/darkfont.webp";
-import { Switch } from "@/components/ui/switch";
-import userimg from "./assets/imgs/user.webp";
+import darkfont from "@/assets/imgs/darkfont.webp";
+import userimg from "@/assets/imgs/user.webp";
 import { Separator } from "@/components/ui/separator";
-import halfbg from "./assets/imgs/halfbg.webp";
-import art from "./assets/imgs/heart.webp";
-import vin from "./assets/imgs/vin.webp";
-import gil from "./assets/imgs/jil.webp";
+import halfbg from "@/assets/imgs/halfbg.webp";
+import art from "@/assets/imgs/heart.webp";
+import vin from "@/assets/imgs/vin.webp";
+import gil from "@/assets/imgs/jil.webp";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -33,11 +30,6 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
@@ -45,7 +37,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-const AboutUs = () => {
+const Budgets = () => {
   const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
     <div
       className={`group relative flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all ${
@@ -80,14 +72,6 @@ const AboutUs = () => {
     console.log("User logged out");
     // Add actual logout logic here (e.g., clear auth token, redirect to login)
   };
-
-  const [fullName, setFullName] = useState("Test User");
-  const [email, setEmail] = useState("test@example.com");
-  const [username, setUsername] = useState("TestUser");
-  const [isEditing, setIsEditing] = useState(false);
-  const [openPopover, setOpenPopover] = useState(false);
-  const [emailNotifications, setEmailNotifications] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   return (
     <div className="flex h-screen bg-indigo-100 overflow-hidden">
@@ -142,7 +126,6 @@ const AboutUs = () => {
               </button>
 
               {/* Avatar with Dropdown */}
-              {/* Avatar with Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="h-10 w-10 cursor-pointer">
@@ -153,128 +136,17 @@ const AboutUs = () => {
                     />
                   </Avatar>
                 </DropdownMenuTrigger>
-
                 <DropdownMenuContent
                   align="end"
                   className="w-48 bg-white shadow-lg rounded-md"
                 >
-                  {/* ✅ Clicking View Profile opens the popover but doesn't close it when moving mouse */}
-                  <Popover
-                    open={openPopover}
-                    onOpenChange={setOpenPopover}
-                    modal={true}
-                  >
-                    <PopoverTrigger asChild>
-                      <DropdownMenuItem
-                        onSelect={(e) => e.preventDefault()} // Prevents dropdown from closing
-                        onClick={() => setOpenPopover(true)}
-                      >
-                        View Profile
-                      </DropdownMenuItem>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      side="right"
-                      align="start"
-                      className="w-80 p-4 bg-white shadow-lg rounded-md"
-                    >
-                      {/* ✅ Section: Personal Information */}
-                      <h2 className="text-xl font-semibold">
-                        Personal Information
-                      </h2>
-                      <div className="relative mt-2 p-4 rounded-lg border bg-gray-100">
-                        {/* ✅ Toggle between Settings and Save button */}
-                        <button
-                          className="absolute bottom-3 right-2 text-gray-600 hover:text-gray-800"
-                          onClick={() => setIsEditing(!isEditing)}
-                        >
-                          {isEditing ? (
-                            <Save className="w-5 h-5" />
-                          ) : (
-                            <Settings className="w-5 h-5" />
-                          )}
-                        </button>
-
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="h-16 w-16">
-                            <img
-                              src={userimg}
-                              alt="User"
-                              className="h-full w-full object-cover rounded-full"
-                            />
-                          </Avatar>
-
-                          <div className="w-full">
-                            {isEditing ? ( // ✅ If in edit mode, show input fields
-                              <>
-                                <input
-                                  type="text"
-                                  className="w-40 px-2 py-1 border rounded-md"
-                                  value={fullName}
-                                  onChange={(e) => setFullName(e.target.value)}
-                                />
-                                <input
-                                  type="email"
-                                  className="w-40 mt-2 px-2 py-1 border rounded-md"
-                                  value={email}
-                                  onChange={(e) => setEmail(e.target.value)}
-                                />
-                                <input
-                                  type="text"
-                                  className="w-40 mt-2 px-2 py-1 border rounded-md"
-                                  value={username}
-                                  onChange={(e) => setUsername(e.target.value)}
-                                />
-                              </>
-                            ) : (
-                              // ✅ Otherwise, display text
-                              <>
-                                <p className="text-lg font-bold">{fullName}</p>
-                                <p className="text-sm text-gray-600">{email}</p>
-                                <p className="text-sm text-gray-600">
-                                  Username: {username}
-                                </p>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* ✅ Section: Notification Settings */}
-                      <div className="mt-4 p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
-                        <div>
-                          <h3 className="text-md font-semibold">
-                            Notification Settings
-                          </h3>
-                          <p className="text-sm text-gray-600">
-                            Manage how you receive alerts and notifications
-                          </p>
-                        </div>
-                        <Switch
-                          checked={notificationsEnabled}
-                          onCheckedChange={setNotificationsEnabled}
-                        />
-                      </div>
-
-                      {/* ✅ Section: Email Notifications */}
-                      <div className="mt-2 p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
-                        <div>
-                          <h3 className="text-md font-semibold">
-                            Email Notifications
-                          </h3>
-                          <p className="text-sm text-gray-600">
-                            Receive weekly summaries and important alerts
-                          </p>
-                        </div>
-                        <Switch
-                          checked={emailNotifications}
-                          onCheckedChange={setEmailNotifications}
-                        />
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-
                   <DropdownMenuItem
-                    onSelect={(e) => e.preventDefault()}
+                    onClick={() => console.log("View Profile Clicked")}
+                  >
+                    View Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()} // Prevents dropdown from closing
                     onClick={() => setIsDialogOpen(true)}
                   >
                     Log Out
@@ -537,4 +409,4 @@ const AboutUs = () => {
   );
 };
 
-export default AboutUs;
+export default Budgets;
