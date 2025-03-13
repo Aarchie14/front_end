@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 import {
   Home,
   Wallet,
-  PiggyBank,
+  Goal,
   List,
   CreditCard,
   Menu,
@@ -45,12 +45,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-} from "@/components/ui/chart";
 
 const Expenses = () => {
   const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
@@ -76,26 +70,39 @@ const Expenses = () => {
     </div>
   );
 
-  // Income data state
-  const [incomeData, setIncomeData] = useState([
+  // Add ref for scroll container
+  const scrollContainerRef = useRef(null);
+
+  // Function to scroll to bottom
+  const scrollToBottom = () => {
+    if (scrollContainerRef.current) {
+      setTimeout(() => {
+        scrollContainerRef.current.scrollTop =
+          scrollContainerRef.current.scrollHeight;
+      }, 100); // Small delay to ensure DOM updates
+    }
+  };
+
+  // Expense data state
+  const [ExpenseData, setExpenseData] = useState([
     {
       id: 1,
-      type: "Food",
-      amount: 1000,
+      type: "Groceries",
+      amount: 5000,
       fill: "hsl(215, 100%, 50%)",
       color: "hsl(215, 100%, 50%)",
     },
     {
       id: 2,
-      type: "Transportation",
-      amount: 200,
+      type: "Investments",
+      amount: 2000,
       fill: "hsl(0, 100%, 65%)",
       color: "hsl(0, 100%, 65%)",
     },
     {
       id: 3,
-      type: "Groceries",
-      amount: 5000,
+      type: "Transport",
+      amount: 500,
       fill: "hsl(135, 75%, 55%)",
       color: "hsl(135, 75%, 55%)",
     },
@@ -110,12 +117,12 @@ const Expenses = () => {
     }).format(amount);
   };
 
-  // Update chart data based on income data
+  // Update chart data based on Expense data
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     // Filter out zero amounts to avoid empty sections in pie chart
-    const filteredData = incomeData.filter((item) => item.amount > 0);
+    const filteredData = ExpenseData.filter((item) => item.amount > 0);
     setChartData(
       filteredData.map((item) => ({
         name: item.type,
@@ -123,62 +130,65 @@ const Expenses = () => {
         fill: item.fill,
       }))
     );
-  }, [incomeData]);
+  }, [ExpenseData]);
 
-  // Create chart config from income data
+  // Create chart config from Expense data
   const chartConfig = {
     value: {
       label: "Amount",
     },
   };
 
-  incomeData.forEach((item) => {
+  ExpenseData.forEach((item) => {
     chartConfig[item.type] = {
       label: item.type,
       color: item.fill,
     };
   });
 
-  // Update income amount handler
-  const updateIncomeAmount = (id, newAmount) => {
-    setIncomeData((prevData) =>
+  // Update Expense amount handler
+  const updateExpenseAmount = (id, newAmount) => {
+    setExpenseData((prevData) =>
       prevData.map((item) =>
         item.id === id ? { ...item, amount: parseFloat(newAmount) || 0 } : item
       )
     );
   };
 
-  // Update income type handler
-  const updateIncomeType = (id, newType) => {
-    setIncomeData((prevData) =>
+  // Update Expense type handler
+  const updateExpenseType = (id, newType) => {
+    setExpenseData((prevData) =>
       prevData.map((item) =>
         item.id === id ? { ...item, type: newType } : item
       )
     );
   };
 
-  // Add new income source
-  const addIncomeSource = () => {
+  // Add new Expense source
+  const addExpenseSource = () => {
     // Generate a new color with slight variation
     const hues = [210, 30, 120, 270, 180];
-    const newId = incomeData.length + 1;
+    const newId = ExpenseData.length + 1;
     const hue = hues[newId % hues.length];
     const newColor = `hsl(${hue}, 85%, 60%)`;
 
     const newSource = {
       id: newId,
-      type: "New Expenses Source",
+      type: "New Expense Source",
       amount: 0,
       fill: newColor,
       color: newColor,
     };
 
-    setIncomeData([...incomeData, newSource]);
+    setExpenseData([...ExpenseData, newSource]);
+
+    // Scroll to bottom after adding new Expense source
+    scrollToBottom();
   };
 
-  // Delete income source
-  const deleteIncomeSource = (id) => {
-    setIncomeData((prevData) => prevData.filter((item) => item.id !== id));
+  // Delete Expense source
+  const deleteExpenseSource = (id) => {
+    setExpenseData((prevData) => prevData.filter((item) => item.id !== id));
   };
 
   // Stat card with editable amount and title
@@ -188,8 +198,8 @@ const Expenses = () => {
     const [editTitle, setEditTitle] = useState(title);
 
     const handleSave = () => {
-      updateIncomeAmount(id, editAmount);
-      updateIncomeType(id, editTitle);
+      updateExpenseAmount(id, editAmount);
+      updateExpenseType(id, editTitle);
       setIsEditing(false);
     };
 
@@ -208,7 +218,7 @@ const Expenses = () => {
             <DropdownMenuItem onClick={() => setIsEditing(true)}>
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => deleteIncomeSource(id)}>
+            <DropdownMenuItem onClick={() => deleteExpenseSource(id)}>
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -242,16 +252,8 @@ const Expenses = () => {
             </>
           ) : (
             <>
-              <h2
-                className="text-lg font-semibold text-white cursor-pointer hover:underline"
-                onClick={() => setIsEditing(true)}
-              >
-                {title}
-              </h2>
-              <p
-                className="text-2xl font-bold text-white cursor-pointer"
-                onClick={() => setIsEditing(true)}
-              >
+              <h2 className="text-lg font-semibold text-white">{title}</h2>
+              <p className="text-2xl font-bold text-white">
                 {formatCurrency(amount)}
               </p>
             </>
@@ -283,8 +285,8 @@ const Expenses = () => {
   const [emailNotifications, setEmailNotifications] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
-  // Calculate total income
-  const totalIncome = incomeData.reduce((sum, item) => sum + item.amount, 0);
+  // Calculate total Expense
+  const totalExpense = ExpenseData.reduce((sum, item) => sum + item.amount, 0);
 
   // Custom tooltip for pie chart
   const CustomTooltip = ({ active, payload }) => {
@@ -294,7 +296,7 @@ const Expenses = () => {
           <p className="font-semibold">{payload[0].name}</p>
           <p>{formatCurrency(payload[0].value)}</p>
           <p className="text-gray-600">
-            {((payload[0].value / totalIncome) * 100).toFixed(1)}% of total
+            {((payload[0].value / totalExpense) * 100).toFixed(1)}% of total
           </p>
         </div>
       );
@@ -308,14 +310,14 @@ const Expenses = () => {
       {/* CSS Variables for chart colors */}
       <style jsx>{`
         :root {
-          --chart-1: 215, 100%, 50%; /* Blue for Income */
+          --chart-1: 215, 100%, 50%; /* Blue for Expense */
           --chart-2: 0, 100%, 65%; /* Red for Expenses */
           --chart-3: 135, 75%, 55%; /* Green for Savings */
           --chart-4: 270, 70%, 60%; /* Purple */
           --chart-5: 45, 100%, 60%; /* Yellow */
 
           /* Card background classes */
-          .bg-income {
+          .bg-Expense {
             background-color: hsl(215, 100%, 50%);
           }
           .bg-expenses {
@@ -349,8 +351,13 @@ const Expenses = () => {
         <nav className="mt-6 space-y-2">
           <NavItem icon={Home} label="Dashboard" isSidebarOpen={true} />
           <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
-          <NavItem icon={CreditCard} label="Expenses" active isSidebarOpen={true} />
-          <NavItem icon={PiggyBank} label="Goals" isSidebarOpen={true} />
+          <NavItem
+            icon={CreditCard}
+            label="Expenses"
+            active
+            isSidebarOpen={true}
+          />
+          <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
           <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
         </nav>
       </aside>
@@ -556,8 +563,8 @@ const Expenses = () => {
                 <CardHeader>
                   <CardTitle>Financial Overview</CardTitle>
                   <CardDescription>
-                    Breakdown of your expenses (Total:{" "}
-                    {formatCurrency(totalIncome)})
+                    Breakdown of your expenses sources (Total:{" "}
+                    {formatCurrency(totalExpense)})
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1 pb-0 flex justify-center">
@@ -592,9 +599,9 @@ const Expenses = () => {
                       </p>
                       <Button
                         className="bg-indigo-500 hover:bg-indigo-600 text-white"
-                        onClick={addIncomeSource}
+                        onClick={addExpenseSource}
                       >
-                        Add Expenses 
+                        Add Expense Source
                       </Button>
                     </div>
                   )}
@@ -604,25 +611,30 @@ const Expenses = () => {
 
             {/* Stats Cards - Stacked vertically, takes 1/3 of the space on desktop */}
             <div className="md:col-span-1 flex flex-col justify-between">
-              <div className="h-[400px] overflow-y-auto space-y-4 p-4 border border-grey shadow-lg  bg-white rounded-xl">
-                {incomeData.map((income) => (
+              <div
+                className="h-[400px] overflow-y-auto space-y-4 p-4 border border-grey shadow-lg bg-white rounded-xl"
+                ref={scrollContainerRef} // Add the ref here
+              >
+                {ExpenseData.map((Expense) => (
                   <StatCard
-                    key={income.id}
-                    id={income.id}
-                    title={income.type}
-                    amount={income.amount}
-                    color={income.color}
+                    key={Expense.id}
+                    id={Expense.id}
+                    title={Expense.type}
+                    amount={Expense.amount}
+                    color={Expense.color}
                   />
                 ))}
               </div>
               <Card
                 className="mt-4 p-4 shadow-lg rounded-2xl mb-4 border-2 border-dashed border-gray-300 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
-                onClick={addIncomeSource}
+                onClick={addExpenseSource}
               >
                 <CardContent className="flex flex-1 flex-col items-center justify-center text-center">
                   <button className="mt-2 flex flex-col items-center text-gray-500 hover:text-indigo-700">
                     <Plus size={28} />
-                    <span className="mt-2 font-medium">Add Expenses Source</span>
+                    <span className="mt-2 font-medium">
+                      Add Expenses Source
+                    </span>
                   </button>
                 </CardContent>
               </Card>

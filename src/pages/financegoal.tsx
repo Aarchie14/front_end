@@ -14,13 +14,13 @@ import { Avatar } from "@/components/ui/avatar";
 import {
   Home,
   Wallet,
-  PiggyBank,
+  Goal,
   List,
   CreditCard,
   Menu,
   Settings,
   Save,
-  HandCoins,
+  PiggyBank,
   Plus,
   Trash2,
 } from "lucide-react";
@@ -459,7 +459,7 @@ const AboutUs = () => {
           <NavItem icon={Home} label="Dashboard" isSidebarOpen={true} />
           <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
           <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
-          <NavItem icon={PiggyBank} label="Goals" isSidebarOpen={true} />
+          <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
           <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
         </nav>
       </aside>
@@ -899,7 +899,7 @@ const AboutUs = () => {
                   </h3>
                 </div>
                 <div className="p-3 bg-indigo-100 rounded-full">
-                  <HandCoins className="w-6 h-6 text-indigo-900" />
+                  <PiggyBank className="w-6 h-6 text-indigo-900" />
                 </div>
               </div>
             </Card>

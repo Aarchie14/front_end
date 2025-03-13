@@ -165,7 +165,7 @@ const BudgetPage = () => {
       name: "March 2025 Budget",
       period: "monthly",
       totalPlanned: 3000,
-      totalActual: 2050,
+      totalActual: 1850,
       startDate: "2025-03-01",
       endDate: "2025-03-31",
       items: [
@@ -203,15 +203,15 @@ const BudgetPage = () => {
         },
         {
           id: 5,
-          category: "School",
+          category: "Utilities",
           planned: 350,
-          actual: 200,
-          remaining: 150,
-          progress: 85,
+          actual: 0,
+          remaining: 350,
+          progress: 0,
         },
         {
           id: 6,
-          category: "Others",
+          category: "Miscellaneous",
           planned: 450,
           actual: 0,
           remaining: 450,
@@ -221,55 +221,55 @@ const BudgetPage = () => {
     },
     {
       id: 2,
-      name: "Week 1 Groceries",
+      name: "Weekly Shopping",
       period: "weekly",
-      totalPlanned: 5000,
-      totalActual: 4500,
+      totalPlanned: 200,
+      totalActual: 150,
       startDate: "2025-03-10",
       endDate: "2025-03-16",
       items: [
         {
           id: 1,
-          category: "House Groceries",
-          planned: 3000,
-          actual: 2250,
-          remaining: 750,
-          progress: 60,
+          category: "Groceries",
+          planned: 150,
+          actual: 130,
+          remaining: 20,
+          progress: 87,
         },
         {
           id: 2,
-          category: "Apartment Groceries",
-          planned: 3000,
-          actual: 2250,
-          remaining: 750,
-          progress: 45,
+          category: "Household",
+          planned: 50,
+          actual: 20,
+          remaining: 30,
+          progress: 40,
         },
       ],
     },
     {
       id: 3,
-      name: "March 1 Budget",
+      name: "Daily Coffee Budget",
       period: "daily",
-      totalPlanned: 200,
-      totalActual: 190,
+      totalPlanned: 10,
+      totalActual: 5,
       startDate: "2025-03-12",
       endDate: "2025-03-12",
       items: [
         {
           id: 1,
-          category: "Food",
-          planned: 100,
-          actual: 75,
-          remaining: 25,
+          category: "Coffee",
+          planned: 5,
+          actual: 5,
+          remaining: 0,
           progress: 100,
         },
         {
           id: 2,
-          category: "Transportation",
-          planned: 100,
-          actual: 115,
+          category: "Snacks",
+          planned: 5,
+          actual: 0,
           remaining: 5,
-          progress: 100,
+          progress: 0,
         },
       ],
     },
@@ -749,16 +749,14 @@ const BudgetPage = () => {
                   </div>
                   <div className="bg-indigo-50 p-4 rounded-lg">
                     <h3 className="text-sm text-indigo-700 mb-1">
-                      Money Spent
+                      Actual Spending
                     </h3>
                     <p className="text-2xl font-bold">
                       ${currentBudget.totalActual.toFixed(2)}
                     </p>
                   </div>
                   <div className="bg-indigo-50 p-4 rounded-lg">
-                    <h3 className="text-sm text-indigo-700 mb-1">
-                      Remaining Money
-                    </h3>
+                    <h3 className="text-sm text-indigo-700 mb-1">Remaining</h3>
                     <p className="text-2xl font-bold">
                       $
                       {(
@@ -792,254 +790,195 @@ const BudgetPage = () => {
             </Card>
           )}
 
-          {/* Budget Visualization and Categories in one row */}
+          {/* Budget Visualization Chart */}
           {currentBudget && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              {/* Budget Visualization Card */}
-              <Card className="h-full">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Budget Visualization</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {currentBudget.items.length > 0 ? (
-                    <div className="w-full h-96 ">
-                      <ResponsiveContainer width="100%" height="100%">
-                        {activeChartView === "bar" ? (
-                          <RechartsBarChart
-                            data={prepareChartData()}
-                            margin={{
-                              top: 20,
-                              right: 30,
-                              left: 20,
-                              bottom: 70,
-                            }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis
-                              dataKey="name"
-                              angle={-45}
-                              textAnchor="end"
-                              height={70}
-                            />
-                            <YAxis />
-                            <Tooltip formatter={(value) => `$${value}`} />
-                            <Legend verticalAlign="top" />
-                            <Bar
-                              dataKey="planned"
-                              name="Budget"
-                              fill="#8884d8"
-                            />
-                            <Bar dataKey="actual" name="Spent" fill="#82ca9d" />
-                          </RechartsBarChart>
-                        ) : (
-                          <RechartsPieChart>
-                            <Pie
-                              data={preparePieChartData()}
-                              cx="50%"
-                              cy="50%"
-                              labelLine={true}
-                              label={({ name, percent }) =>
-                                `${name}: ${(percent * 100).toFixed(0)}%`
-                              }
-                              outerRadius={80}
-                              fill="#8884d8"
-                              dataKey="value"
-                            >
-                              {preparePieChartData().map((entry, index) => (
-                                <Cell
-                                  key={`cell-${index}`}
-                                  fill={COLORS[index % COLORS.length]}
-                                />
-                              ))}
-                            </Pie>
-                            <Tooltip formatter={(value) => `$${value}`} />
-                            <Legend />
-                          </RechartsPieChart>
-                        )}
-                      </ResponsiveContainer>
-                    </div>
-                  ) : (
-                    <div className="text-center py-6">
-                      <p className="text-gray-500">
-                        Add budget categories to see visualization.
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Budget Categories Card */}
-              <Card className="h-full flex flex-col">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Budget Categories</CardTitle>
+            <Card className="mb-6">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Budget Visualization</CardTitle>
+                <div className="flex items-center space-x-2">
                   <Button
-                    onClick={() => {
-                      setEditingBudgetId(currentBudget.id);
-                      setNewItemDialogOpen(true);
-                    }}
+                    variant={activeChartView === "bar" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveChartView("bar")}
                   >
-                    <Plus className="mr-2 h-4 w-4" /> Add Category
+                    <BarChart className="h-4 w-4 mr-2" />
+                    Bar
                   </Button>
-                </CardHeader>
-                <CardContent className="flex-grow overflow-auto">
-                  {currentBudget.items.length > 0 ? (
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Category</TableHead>
-                            <TableHead className="text-center">
-                              Budget
-                            </TableHead>
-                            <TableHead className="text-center">Spent</TableHead>
-                            <TableHead className="text-center">
-                              Remaining
-                            </TableHead>
-                            <TableHead>Progress</TableHead>
-                            <TableHead className="text-right">
-                              Actions
-                            </TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {currentBudget.items.map((item) => (
-                            <TableRow key={item.id}>
-                              <TableCell className="font-medium">
-                                {item.category}
-                              </TableCell>
-                              <TableCell className="text-center">
-                                ${item.planned.toFixed(2)}
-                              </TableCell>
-                              <TableCell className="text-center">
-                                <div className="flex justify-center items-center gap-2">
-                                  <Input
-                                    type="number"
-                                    value={item.actual}
-                                    onChange={(e) =>
-                                      updateActualSpending(
-                                        currentBudget.id,
-                                        item.id,
-                                        e.target.value
-                                      )
-                                    }
-                                    className="w-20 text-right"
-                                  />
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-center">
-                                ${item.remaining.toFixed(2)}
-                              </TableCell>
-                              <TableCell>
-                                <Progress
-                                  value={item.progress}
-                                  className="h-2"
-                                />
-                              </TableCell>
-                              <TableCell className="text-right">
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => {
-                                    setItemToDelete(item.id);
-                                    setEditingBudgetId(currentBudget.id);
-                                    setDeleteAlertOpen(true);
-                                  }}
-                                >
-                                  <Trash2 className="h-4 w-4 text-red-500" />
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  ) : (
-                    <div className="text-center py-6">
-                      <p className="text-gray-500">
-                        No categories found. Add a category to get started.
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {/* Tips and Suggestions */}
-          {currentBudget && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Tips & Suggestions</CardTitle>
+                  <Button
+                    variant={activeChartView === "pie" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveChartView("pie")}
+                  >
+                    <PieChart className="h-4 w-4 mr-2" />
+                    Pie
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {/* Dynamic suggestions based on budget status */}
-                  {currentBudget.totalActual >
-                    currentBudget.totalPlanned * 0.9 && (
-                    <div className="flex items-start space-x-2 p-3 bg-red-50 rounded-lg">
-                      <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-                      <div>
-                        <h4 className="font-medium text-red-800">
-                          Budget Alert
-                        </h4>
-                        <p className="text-sm text-red-700">
-                          You've used{" "}
-                          {Math.round(
-                            (currentBudget.totalActual /
-                              currentBudget.totalPlanned) *
-                              100
-                          )}
-                          % of your total budget. Consider reducing spending in
-                          non-essential categories.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {currentBudget.items.some((item) => item.progress > 90) && (
-                    <div className="flex items-start space-x-2 p-3 bg-amber-50 rounded-lg">
-                      <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
-                      <div>
-                        <h4 className="font-medium text-amber-800">
-                          Category Alert
-                        </h4>
-                        <p className="text-sm text-amber-700">
-                          Some categories are near or over their budget limits.
-                          Consider reallocating funds from categories with
-                          remaining budget.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {currentBudget.items.some((item) => item.progress === 0) && (
-                    <div className="flex items-start space-x-2 p-3 bg-indigo-50 rounded-lg">
-                      <AlertCircle className="h-5 w-5 text-indigo-500 mt-0.5" />
-                      <div>
-                        <h4 className="font-medium text-indigo-800">
-                          Unused Categories
-                        </h4>
-                        <p className="text-sm text-indigo-700">
-                          Some categories have no spending yet. Remember to
-                          track all your expenses to keep your budget accurate.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* General tips */}
-                  <div className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg">
-                    <AlertCircle className="h-5 w-5 text-green-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-medium text-green-800">Budget Tip</h4>
-                      <p className="text-sm text-green-700">
-                        Try the 50/30/20 rule: 50% of income on needs, 30% on
-                        wants, and 20% on savings and debt repayment.
-                      </p>
-                    </div>
+                {currentBudget.items.length > 0 ? (
+                  <div className="w-full h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      {activeChartView === "bar" ? (
+                        <RechartsBarChart
+                          data={prepareChartData()}
+                          margin={{
+                            top: 20,
+                            right: 30,
+                            left: 20,
+                            bottom: 70,
+                          }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis
+                            dataKey="name"
+                            angle={-45}
+                            textAnchor="end"
+                            height={70}
+                          />
+                          <YAxis />
+                          <Tooltip formatter={(value) => `$${value}`} />
+                          <Legend />
+                          <Bar
+                            dataKey="planned"
+                            name="Planned"
+                            fill="#8884d8"
+                          />
+                          <Bar dataKey="actual" name="Actual" fill="#82ca9d" />
+                        </RechartsBarChart>
+                      ) : (
+                        <RechartsPieChart>
+                          <Pie
+                            data={preparePieChartData()}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={true}
+                            label={({ name, percent }) =>
+                              `${name}: ${(percent * 100).toFixed(0)}%`
+                            }
+                            outerRadius={80}
+                            fill="#8884d8"
+                            dataKey="value"
+                          >
+                            {preparePieChartData().map((entry, index) => (
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={COLORS[index % COLORS.length]}
+                              />
+                            ))}
+                          </Pie>
+                          <Tooltip formatter={(value) => `$${value}`} />
+                          <Legend />
+                        </RechartsPieChart>
+                      )}
+                    </ResponsiveContainer>
                   </div>
-                </div>
+                ) : (
+                  <div className="text-center py-6">
+                    <p className="text-gray-500">
+                      Add budget categories to see visualization.
+                    </p>
+                  </div>
+                )}
               </CardContent>
+            </Card>
+          )}
+
+          {/* Budget Categories Table */}
+          {currentBudget && (
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Budget Categories</CardTitle>
+                <Button
+                  onClick={() => {
+                    setEditingBudgetId(currentBudget.id);
+                    setNewItemDialogOpen(true);
+                  }}
+                >
+                  <Plus className="mr-2 h-4 w-4" /> Add Category
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {currentBudget.items.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Category</TableHead>
+                        <TableHead className="text-right">Planned</TableHead>
+                        <TableHead className="text-right">Actual</TableHead>
+                        <TableHead className="text-right">Remaining</TableHead>
+                        <TableHead>Progress</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {currentBudget.items.map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell className="font-medium">
+                            {item.category}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            ${item.planned.toFixed(2)}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end items-center gap-2">
+                              <Input
+                                type="number"
+                                value={item.actual}
+                                onChange={(e) =>
+                                  updateActualSpending(
+                                    currentBudget.id,
+                                    item.id,
+                                    e.target.value
+                                  )
+                                }
+                                className="w-24 text-right"
+                              />
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            ${item.remaining.toFixed(2)}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Progress value={item.progress} className="h-2" />
+                              <span className="text-xs">
+                                {Math.round(item.progress)}%
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                setItemToDelete(item.id);
+                                setEditingBudgetId(currentBudget.id);
+                                setDeleteAlertOpen(true);
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <div className="text-center py-6">
+                    <p className="text-gray-500">
+                      No categories found. Add a category to get started.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <div className="text-sm text-gray-500">
+                  Last updated: {new Date().toLocaleDateString()}
+                </div>
+                <Button className="bg-indigo-600 hover:bg-indigo-700">
+                  <Save className="mr-2 h-4 w-4" /> Save Budget
+                </Button>
+              </CardFooter>
             </Card>
           )}
         </main>
@@ -1047,36 +986,33 @@ const BudgetPage = () => {
 
       {/* New Budget Dialog */}
       <Dialog open={newBudgetDialogOpen} onOpenChange={setNewBudgetDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Create New Budget</DialogTitle>
             <DialogDescription>
               Add a new budget to track your spending.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="budgetName" className="text-right">
-                Name
-              </Label>
+
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="budgetName">Budget Name</Label>
               <Input
                 id="budgetName"
+                placeholder="e.g., April 2025 Budget"
                 value={newBudgetName}
                 onChange={(e) => setNewBudgetName(e.target.value)}
-                className="col-span-3"
-                placeholder="e.g., March 2025 Budget"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="budgetPeriod" className="text-right">
-                Period
-              </Label>
+
+            <div className="space-y-2">
+              <Label htmlFor="budgetType">Budget Type</Label>
               <Select
                 value={newBudgetPeriod}
-                onValueChange={(value) => setNewBudgetPeriod(value)}
+                onValueChange={setNewBudgetPeriod}
               >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select period" />
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a budget type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="daily">Daily</SelectItem>
@@ -1086,6 +1022,7 @@ const BudgetPage = () => {
               </Select>
             </div>
           </div>
+
           <DialogFooter>
             <Button
               variant="outline"
@@ -1100,40 +1037,37 @@ const BudgetPage = () => {
 
       {/* New Budget Item Dialog */}
       <Dialog open={newItemDialogOpen} onOpenChange={setNewItemDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Budget Category</DialogTitle>
             <DialogDescription>
               Add a new category to your budget.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="categoryName" className="text-right">
-                Category
-              </Label>
+
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="categoryName">Category Name</Label>
               <Input
                 id="categoryName"
+                placeholder="e.g., Groceries"
                 value={newItemCategory}
                 onChange={(e) => setNewItemCategory(e.target.value)}
-                className="col-span-3"
-                placeholder="e.g., Groceries"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="plannedAmount" className="text-right">
-                Planned Amount
-              </Label>
+
+            <div className="space-y-2">
+              <Label htmlFor="plannedAmount">Planned Amount ($)</Label>
               <Input
                 id="plannedAmount"
                 type="number"
+                placeholder="0.00"
                 value={newItemPlanned}
                 onChange={(e) => setNewItemPlanned(e.target.value)}
-                className="col-span-3"
-                placeholder="0.00"
               />
             </div>
           </div>
+
           <DialogFooter>
             <Button
               variant="outline"
@@ -1146,14 +1080,14 @@ const BudgetPage = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Category Alert */}
+      {/* Delete Budget Item Alert */}
       <AlertDialog open={deleteAlertOpen} onOpenChange={setDeleteAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Category</AlertDialogTitle>
+            <AlertDialogTitle>Delete Budget Category</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete this category and its data from your
-              budget.
+              Are you sure you want to delete this category? This action cannot
+              be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -1162,7 +1096,7 @@ const BudgetPage = () => {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteItem}
-              className="bg-red-500 hover:bg-red-600 text-white"
+              className="bg-red-500 text-white hover:bg-red-600"
             >
               Delete
             </AlertDialogAction>
@@ -1179,8 +1113,9 @@ const BudgetPage = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Budget</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete this budget and all its categories.
-              This action cannot be undone.
+              Are you sure you want to delete this entire budget? This will
+              remove all categories and spending data associated with it. This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -1189,9 +1124,9 @@ const BudgetPage = () => {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteBudget}
-              className="bg-red-500 hover:bg-red-600 text-white"
+              className="bg-red-500 text-white hover:bg-red-600"
             >
-              Delete
+              Delete Budget
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

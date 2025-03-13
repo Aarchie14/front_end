@@ -4,7 +4,7 @@ import { Avatar } from "@/components/ui/avatar";
 import {
   Home,
   Wallet,
-  PiggyBank,
+  Goal,
   List,
   CreditCard,
   Menu,
@@ -139,7 +139,7 @@ const Dashboard = () => {
           />
           <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
           <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
-          <NavItem icon={PiggyBank} label="Goals" isSidebarOpen={true} />
+          <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
           <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
         </nav>
       </aside>
