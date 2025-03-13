@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
 import {
   Home,
   Wallet,
@@ -14,14 +15,14 @@ import {
   Settings,
   Save,
 } from "lucide-react";
-import darkfont from "./assets/imgs/darkfont.webp";
+import darkfont from "@/assets/imgs/darkfont.webp";
 import { Switch } from "@/components/ui/switch";
-import userimg from "./assets/imgs/user.webp";
+import userimg from "@/assets/imgs/user.webp";
 import { Separator } from "@/components/ui/separator";
-import halfbg from "./assets/imgs/halfbg.webp";
-import art from "./assets/imgs/heart.webp";
-import vin from "./assets/imgs/vin.webp";
-import gil from "./assets/imgs/jil.webp";
+import halfbg from "@/assets/imgs/halfbg.webp";
+import art from "@/assets/imgs/heart.webp";
+import vin from "@/assets/imgs/vin.webp";
+import gil from "@/assets/imgs/jil.webp";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -111,11 +112,25 @@ const AboutUs = () => {
 
         {/* Sidebar Navigation */}
         <nav className="mt-6 space-y-2">
-          <NavItem icon={Home} label="Dashboard" isSidebarOpen={true} />
-          <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
-          <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
-          <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
-          <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
+          <Link to="/dashboard">
+            <NavItem
+              icon={Home}
+              label="Dashboard"
+              isSidebarOpen={true} // Always show labels in sidebar
+            />
+          </Link>
+          <Link to="/income">
+            <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
+          </Link>
+          <Link to="/expenses">
+            <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
+          </Link>
+          <Link to="/financegoal">
+            <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
+          </Link>
+          <Link to="/budgets">
+            <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
+          </Link>
         </nav>
       </aside>
 
@@ -137,10 +152,11 @@ const AboutUs = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="text-base sm:text-lg md:text-xl font-bold text-black hover:underline">
-                About Us
-              </button>
-
+              <Link to="/aboutus">
+                <button className="text-base sm:text-lg md:text-xl font-bold text-black hover:underline">
+                  About Us
+                </button>
+              </Link>
               {/* Avatar with Dropdown */}
               {/* Avatar with Dropdown */}
               <DropdownMenu>

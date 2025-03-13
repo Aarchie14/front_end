@@ -51,9 +51,9 @@ import {
   Calendar,
   AlertCircle,
 } from "lucide-react";
-import darkfont from "./assets/imgs/darkfont.webp";
+import darkfont from "@/assets/imgs/darkfont.webp";
 import { Avatar } from "@/components/ui/avatar";
-import userimg from "./assets/imgs/user.webp";
+import userimg from "@/assets/imgs/user.webp";
 import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog,

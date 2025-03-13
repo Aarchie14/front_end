@@ -4,7 +4,7 @@ import { Avatar } from "@/components/ui/avatar";
 import {
   Home,
   Wallet,
-  PiggyBank,
+  Goal,
   List,
   CreditCard,
   Menu,
@@ -48,12 +48,12 @@ import {
 
 // Sample data for Income vs Expenses chart
 const data = [
-  { month: "Jan", income: 3000, expenses: 2000 },
-  { month: "Feb", income: 2500, expenses: 2200 },
-  { month: "Mar", income: 7000, expenses: 5000 },
-  { month: "Apr", income: 4000, expenses: 3500 },
-  { month: "May", income: 4500, expenses: 4000 },
-  { month: "Jun", income: 5000, expenses: 4500 },
+  { day: "Mon", income: 3000, expenses: 2000 },
+  { day: "Tue", income: 2500, expenses: 2200 },
+  { day: "Wed", income: 7000, expenses: 5000 },
+  { day: "Thur", income: 4000, expenses: 3500 },
+  { day: "Fri", income: 4500, expenses: 4000 },
+  { day: "Sat", income: 5000, expenses: 4500 },
 ];
 
 const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
@@ -139,7 +139,7 @@ const Dashboard = () => {
           />
           <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
           <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
-          <NavItem icon={PiggyBank} label="Savings" isSidebarOpen={true} />
+          <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
           <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
         </nav>
       </aside>
@@ -341,10 +341,9 @@ const Dashboard = () => {
           </AlertDialog>
 
           {/* Stats Cards */}
-          <div className="text-base sm:text-lg md:text-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="text-base sm:text-lg md:text-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
             <StatCard title="Total Income" amount="₱100.00" />
             <StatCard title="Total Expenses" amount="₱100.00" />
-            <StatCard title="Total Savings" amount="₱100.00" />
           </div>
 
           {/* Income vs Expenses Chart */}
@@ -405,7 +404,7 @@ const Dashboard = () => {
                     {/* Add grid here */}
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
 
-                    <XAxis dataKey="month" />
+                    <XAxis dataKey="day" />
                     <YAxis />
                     <Tooltip />
                     <Area

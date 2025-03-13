@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -53,9 +54,10 @@ import {
   AlertCircle,
   PieChart,
 } from "lucide-react";
-import darkfont from "./assets/imgs/darkfont.webp";
+import darkfont from "@/assets/imgs/darkfont.webp";
+import { Switch } from "@/components/ui/switch";
 import { Avatar } from "@/components/ui/avatar";
-import userimg from "./assets/imgs/user.webp";
+import userimg from "@/assets/imgs/user.webp";
 import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog,
@@ -510,6 +512,16 @@ const BudgetPage = () => {
     "#FF6B6B",
   ];
 
+  const [fullName, setFullName] = useState("Test User");
+  const [email, setEmail] = useState("test@example.com");
+  const [username, setUsername] = useState("TestUser");
+  const [isEditing, setIsEditing] = useState(false);
+  const [openPopover, setOpenPopover] = useState(false);
+  const [emailNotifications, setEmailNotifications] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+
+  const currencySymbol = "₱"; // Change to your preferred currency
+
   return (
     <div className="flex h-screen bg-indigo-100 overflow-hidden">
       {/* Sidebar */}
@@ -532,16 +544,26 @@ const BudgetPage = () => {
 
         {/* Sidebar Navigation */}
         <nav className="mt-6 space-y-2">
-          <NavItem icon={Home} label="Dashboard" isSidebarOpen={true} />
-          <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
-          <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
-          <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
-          <NavItem
-            icon={List}
-            label="Budgets"
-            active={true}
-            isSidebarOpen={true}
-          />
+          <Link to="/dashboard">
+            <NavItem icon={Home} label="Dashboard" isSidebarOpen={true} />
+          </Link>
+          <Link to="/income">
+            <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
+          </Link>
+          <Link to="/expenses">
+            <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
+          </Link>
+          <Link to="/financegoal">
+            <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
+          </Link>
+          <Link to="/budgets">
+            <NavItem
+              icon={List}
+              label="Budgets"
+              active={true}
+              isSidebarOpen={true}
+            />
+          </Link>
         </nav>
       </aside>
 
@@ -566,9 +588,11 @@ const BudgetPage = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="text-base sm:text-lg md:text-xl font-bold text-black hover:underline">
-                About Us
-              </button>
+              <Link to="/aboutus">
+                <button className="text-base sm:text-lg md:text-xl font-bold text-black hover:underline">
+                  About Us
+                </button>
+              </Link>
 
               {/* Avatar with Dropdown */}
               <DropdownMenu>
@@ -586,9 +610,120 @@ const BudgetPage = () => {
                   align="end"
                   className="w-48 bg-white shadow-lg rounded-md"
                 >
-                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    View Profile
-                  </DropdownMenuItem>
+                  {/* ✅ Clicking View Profile opens the popover but doesn't close it when moving mouse */}
+                  <Popover
+                    open={openPopover}
+                    onOpenChange={setOpenPopover}
+                    modal={true}
+                  >
+                    <PopoverTrigger asChild>
+                      <DropdownMenuItem
+                        onSelect={(e) => e.preventDefault()} // Prevents dropdown from closing
+                        onClick={() => setOpenPopover(true)}
+                      >
+                        View Profile
+                      </DropdownMenuItem>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      side="right"
+                      align="start"
+                      className="w-80 p-4 bg-white shadow-lg rounded-md"
+                    >
+                      {/* ✅ Section: Personal Information */}
+                      <h2 className="text-xl font-semibold">
+                        Personal Information
+                      </h2>
+                      <div className="relative mt-2 p-4 rounded-lg border bg-gray-100">
+                        {/* ✅ Toggle between Settings and Save button */}
+                        <button
+                          className="absolute bottom-3 right-2 text-gray-600 hover:text-gray-800"
+                          onClick={() => setIsEditing(!isEditing)}
+                        >
+                          {isEditing ? (
+                            <Save className="w-5 h-5" />
+                          ) : (
+                            <Settings className="w-5 h-5" />
+                          )}
+                        </button>
+
+                        <div className="flex items-center space-x-3">
+                          <Avatar className="h-16 w-16">
+                            <img
+                              src={userimg}
+                              alt="User"
+                              className="h-full w-full object-cover rounded-full"
+                            />
+                          </Avatar>
+
+                          <div className="w-full">
+                            {isEditing ? ( // ✅ If in edit mode, show input fields
+                              <>
+                                <input
+                                  type="text"
+                                  className="w-40 px-2 py-1 border rounded-md"
+                                  value={fullName}
+                                  onChange={(e) => setFullName(e.target.value)}
+                                />
+                                <input
+                                  type="email"
+                                  className="w-40 mt-2 px-2 py-1 border rounded-md"
+                                  value={email}
+                                  onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <input
+                                  type="text"
+                                  className="w-40 mt-2 px-2 py-1 border rounded-md"
+                                  value={username}
+                                  onChange={(e) => setUsername(e.target.value)}
+                                />
+                              </>
+                            ) : (
+                              // ✅ Otherwise, display text
+                              <>
+                                <p className="text-lg font-bold">{fullName}</p>
+                                <p className="text-sm text-gray-600">{email}</p>
+                                <p className="text-sm text-gray-600">
+                                  Username: {username}
+                                </p>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* ✅ Section: Notification Settings */}
+                      <div className="mt-4 p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
+                        <div>
+                          <h3 className="text-md font-semibold">
+                            Notification Settings
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            Manage how you receive alerts and notifications
+                          </p>
+                        </div>
+                        <Switch
+                          checked={notificationsEnabled}
+                          onCheckedChange={setNotificationsEnabled}
+                        />
+                      </div>
+
+                      {/* ✅ Section: Email Notifications */}
+                      <div className="mt-2 p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
+                        <div>
+                          <h3 className="text-md font-semibold">
+                            Email Notifications
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            Receive weekly summaries and important alerts
+                          </p>
+                        </div>
+                        <Switch
+                          checked={emailNotifications}
+                          onCheckedChange={setEmailNotifications}
+                        />
+                      </div>
+                    </PopoverContent>
+                  </Popover>
 
                   <DropdownMenuItem
                     onSelect={(e) => e.preventDefault()}
@@ -656,7 +791,7 @@ const BudgetPage = () => {
 
             <Button
               onClick={() => setNewBudgetDialogOpen(true)}
-              className="bg-indigo-600 hover:bg-indigo-700"
+              className="bg-indigo-400 hover:bg-indigo-600"
             >
               <Plus className="mr-2 h-4 w-4" /> New Budget
             </Button>
@@ -739,54 +874,35 @@ const BudgetPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-                  <div className="bg-indigo-50 p-4 rounded-lg">
+                  <div className="bg-gray-100 p-4 rounded-lg">
                     <h3 className="text-sm text-indigo-700 mb-1">
                       Planned Budget
                     </h3>
                     <p className="text-2xl font-bold">
-                      ${currentBudget.totalPlanned.toFixed(2)}
+                      {currencySymbol}
+                      {currentBudget.totalPlanned.toFixed(2)}
                     </p>
                   </div>
-                  <div className="bg-indigo-50 p-4 rounded-lg">
+                  <div className="bg-gray-100 p-4 rounded-lg">
                     <h3 className="text-sm text-indigo-700 mb-1">
                       Money Spent
                     </h3>
                     <p className="text-2xl font-bold">
-                      ${currentBudget.totalActual.toFixed(2)}
+                      {currencySymbol}
+                      {currentBudget.totalActual.toFixed(2)}
                     </p>
                   </div>
-                  <div className="bg-indigo-50 p-4 rounded-lg">
+                  <div className="bg-gray-100 p-4 rounded-lg">
                     <h3 className="text-sm text-indigo-700 mb-1">
                       Remaining Money
                     </h3>
                     <p className="text-2xl font-bold">
-                      $
+                      {currencySymbol}
                       {(
                         currentBudget.totalPlanned - currentBudget.totalActual
                       ).toFixed(2)}
                     </p>
                   </div>
-                </div>
-
-                <div className="mb-2">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-sm font-medium">Budget Progress</h3>
-                    <span className="text-sm">
-                      {Math.round(
-                        (currentBudget.totalActual /
-                          currentBudget.totalPlanned) *
-                          100
-                      ) || 0}
-                      %
-                    </span>
-                  </div>
-                  <Progress
-                    value={
-                      (currentBudget.totalActual / currentBudget.totalPlanned) *
-                        100 || 0
-                    }
-                    className="h-2 mt-1"
-                  />
                 </div>
               </CardContent>
             </Card>
@@ -822,7 +938,7 @@ const BudgetPage = () => {
                               height={70}
                             />
                             <YAxis />
-                            <Tooltip formatter={(value) => `$${value}`} />
+                            <Tooltip formatter={(value) => `₱₱{value}`} />
                             <Legend verticalAlign="top" />
                             <Bar
                               dataKey="planned"
@@ -852,7 +968,7 @@ const BudgetPage = () => {
                                 />
                               ))}
                             </Pie>
-                            <Tooltip formatter={(value) => `$${value}`} />
+                            <Tooltip formatter={(value) => `₱₱{value}`} />
                             <Legend />
                           </RechartsPieChart>
                         )}
@@ -873,6 +989,7 @@ const BudgetPage = () => {
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle>Budget Categories</CardTitle>
                   <Button
+                    className="bg-indigo-400 hover:bg-indigo-600"
                     onClick={() => {
                       setEditingBudgetId(currentBudget.id);
                       setNewItemDialogOpen(true);
@@ -895,7 +1012,6 @@ const BudgetPage = () => {
                             <TableHead className="text-center">
                               Remaining
                             </TableHead>
-                            <TableHead>Progress</TableHead>
                             <TableHead className="text-right">
                               Actions
                             </TableHead>
@@ -908,7 +1024,8 @@ const BudgetPage = () => {
                                 {item.category}
                               </TableCell>
                               <TableCell className="text-center">
-                                ${item.planned.toFixed(2)}
+                                {currencySymbol}
+                                {item.planned.toFixed(2)}
                               </TableCell>
                               <TableCell className="text-center">
                                 <div className="flex justify-center items-center gap-2">
@@ -927,13 +1044,8 @@ const BudgetPage = () => {
                                 </div>
                               </TableCell>
                               <TableCell className="text-center">
-                                ${item.remaining.toFixed(2)}
-                              </TableCell>
-                              <TableCell>
-                                <Progress
-                                  value={item.progress}
-                                  className="h-2"
-                                />
+                                {currencySymbol}
+                                {item.remaining.toFixed(2)}
                               </TableCell>
                               <TableCell className="text-right">
                                 <Button

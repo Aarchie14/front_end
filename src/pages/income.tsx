@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Avatar } from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
 import {
   Home,
   Wallet,
@@ -349,11 +350,21 @@ const Income = () => {
 
         {/* Sidebar Navigation */}
         <nav className="mt-6 space-y-2">
-          <NavItem icon={Home} label="Dashboard" isSidebarOpen={true} />
-          <NavItem icon={Wallet} label="Income" active isSidebarOpen={true} />
-          <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
-          <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
-          <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
+          <Link to="/dashboard">
+            <NavItem icon={Home} label="Dashboard" isSidebarOpen={true} />
+          </Link>
+          <Link to="/income">
+            <NavItem icon={Wallet} label="Income" active isSidebarOpen={true} />
+          </Link>
+          <Link to="/expenses">
+            <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
+          </Link>
+          <Link to="/financegoal">
+            <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
+          </Link>
+          <Link to="/budgets">
+            <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
+          </Link>
         </nav>
       </aside>
 
@@ -378,10 +389,11 @@ const Income = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="text-base sm:text-lg md:text-xl font-bold text-black hover:underline">
-                About Us
-              </button>
-
+              <Link to="/aboutus">
+                <button className="text-base sm:text-lg md:text-xl font-bold text-black hover:underline">
+                  About Us
+                </button>
+              </Link>
               {/* Avatar with Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
