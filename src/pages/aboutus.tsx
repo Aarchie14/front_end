@@ -339,10 +339,10 @@ const AboutUs = () => {
               {/* Adds a dark overlay */}
               <div className="container mx-auto px-4 py-20 relative">
                 <div className="max-w-3xl mx-auto text-center fade-in">
-                  <h1 className="text-4xl md:text-5xl font-bold mb-6">
+                  <h1 className="text-base md:text-5xl font-bold mb-6">
                     Welcome to FinanceFlow!
                   </h1>
-                  <p className="text-lg md:text-xl opacity-90 text-justify">
+                  <p className="text-base md:text-xl opacity-90 text-justify">
                     At FinanceFlow, we believe that managing your personal
                     finances should be straightforward, empowering, and
                     accessible to everyone. Our mission is to help individuals
@@ -360,22 +360,22 @@ const AboutUs = () => {
                 <div className="max-w-3xl mx-auto slide-up">
                   <div className="flex items-center gap-2 mb-6">
                     <Users className="h-6 w-6 text-primary" />
-                    <h2 className="text-3xl font-bold">Our Story</h2>
+                    <h2 className="text-base md:text-3xl font-bold">Our Story</h2>
                   </div>
-                  <p className="text-gray-700 text-lg leading-relaxed text-justify">
+                  <p className="text-gray-700 text-base md-text-lg leading-relaxed text-justify">
                     FinanceFlow was born out of a simple yet powerful idea: to
                     help individuals and businesses gain control over their
                     finances with ease. We realized that many people struggle
                     with budgeting, tracking expenses, and making informed
                     financial decisions.
                   </p>
-                  <p className="mt-4 text-gray-700 text-lg leading-relaxed text-justify">
+                  <p className="mt-4 text-gray-700 text-base md-text-lg leading-relaxed text-justify">
                     Our journey began with a passion for financial literacy and
                     technology. We assembled a team of experts in finance and
                     software development to create an intuitive platform that
                     simplifies financial management for everyone.
                   </p>
-                  <p className="mt-4 text-gray-700 text-lg leading-relaxed text-justify">
+                  <p className="mt-4 text-gray-700 text-base md-text-lg leading-relaxed text-justify">
                     Since our launch, we’ve been committed to continuous
                     innovation. We listen to our users, adapt to their needs,
                     and refine our platform to provide the best possible
@@ -392,22 +392,22 @@ const AboutUs = () => {
                 <div className="max-w-3xl mx-auto slide-up">
                   <div className="flex items-center gap-2 mb-6">
                     <Target className="h-6 w-6 text-primary" />
-                    <h2 className="text-3xl font-bold">Our Mission</h2>
+                    <h2 className="text-base md:text-3xl font-bold">Our Mission</h2>
                   </div>
-                  <p className="text-gray-700 text-lg leading-relaxed text-justify">
+                  <p className="text-gray-700 text-base md-text-lg leading-relaxed text-justify">
                     At FinanceFlow, our mission is to empower you to take charge
                     of your finances. We strive to provide you with the tools
                     and resources you need to make informed financial decisions,
                     set achievable goals, and ultimately achieve financial
                     freedom.
                   </p>
-                  <p className="mt-4 text-gray-700 text-lg leading-relaxed text-justify">
+                  <p className="mt-4 text-gray-700 text-base md-text-lg leading-relaxed text-justify">
                     We believe that everyone deserves the opportunity to build a
                     secure financial future. That’s why we are committed to
                     delivering a user-friendly, educational, and intuitive
                     platform that simplifies personal finance management.
                   </p>
-                  <p className="mt-4 text-gray-700 text-lg leading-relaxed text-justify">
+                  <p className="mt-4 text-gray-700 text-base md-text-lg leading-relaxed text-justify">
                     Our goal is not just to track your finances but to educate
                     and guide you toward smarter money habits, better
                     investments, and long-term financial stability. We are here
@@ -423,9 +423,9 @@ const AboutUs = () => {
                 <div className="max-w-3xl mx-auto slide-up">
                   <div className="flex items-center gap-2 mb-6">
                     <Eye className="h-6 w-6 text-primary" />
-                    <h2 className="text-3xl font-bold">Our Vision</h2>
+                    <h2 className="text-base md:text-3xl font-bold">Our Vision</h2>
                   </div>
-                  <p className="text-gray-600 text-lg leading-relaxed text-justify">
+                  <p className="text-gray-600 text-base md-text-lg leading-relaxed text-justify">
                     We prioritize simplicity by offering a user-friendly design
                     and straightforward features that make finance tracking
                     accessible to everyone. Transparency is at the core of our
@@ -445,10 +445,10 @@ const AboutUs = () => {
             <section className="py-20  bg-gray-50">
               <div className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto slide-up">
-                  <h2 className="text-3xl font-bold text-center mb-4">
+                  <h2 className="text-base md:text-3xl font-bold text-center mb-4">
                     Meet Our Team
                   </h2>
-                  <p className="text-gray-600 text-lg leading-relaxed text-center text-justify mb-10">
+                  <p className="text-gray-600 text-base md-text-lg leading-relaxed text-center text-justify mb-10">
                     Our dedicated team of finance enthusiasts, developers, and
                     customer support specialists is passionate about helping you
                     succeed. We are committed to continuously improving our
@@ -464,10 +464,10 @@ const AboutUs = () => {
                       alt="Team Member"
                       className="w-full h-60 object-cover rounded-lg mb-4"
                     />
-                    <h3 className="text-xl text-center font-semibold mb-2">
+                    <h3 className="text-base md:text-xl text-center font-semibold mb-2">
                       Gil John Rey Naldoza
                     </h3>
-                    <p className="text-center text-indigo-500">
+                    <p className="text-base md:text-xl text-center text-indigo-500">
                       UI/UX Designer
                     </p>
                   </Card>
@@ -478,10 +478,10 @@ const AboutUs = () => {
                       alt="Team Member"
                       className="w-full h-60 object-cover rounded-lg mb-4"
                     />
-                    <h3 className="text-xl text-center font-semibold mb-2">
+                    <h3 className="text-base md:text-xl text-center font-semibold mb-2">
                       Vin Marcus Gerebise
                     </h3>
-                    <p className="text-center text-indigo-500">
+                    <p className="text-base md:text-xl text-center text-indigo-500">
                       Backend and Frontend Logic Programmer
                     </p>
                   </Card>
@@ -492,10 +492,10 @@ const AboutUs = () => {
                       alt="Team Member"
                       className="w-full h-60 object-cover rounded-lg mb-4"
                     />
-                    <h3 className="text-xl text-center font-semibold mb-2">
+                    <h3 className="text-base md:text-xl  text-center font-semibold mb-2">
                       Heart Chiong
                     </h3>
-                    <p className=" text-center text-indigo-500">
+                    <p className="text-base md:text-xl  text-center text-indigo-500">
                       Frontend Logic and Frontend Design Programmer
                     </p>
                   </Card>
@@ -508,12 +508,12 @@ const AboutUs = () => {
               <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                   <div>
-                    <h3 className="font-bold text-lg mb-4">FinanceFlow</h3>
+                    <h3 className="font-bold text-base md:text-lg mb-4">FinanceFlow</h3>
                     <p className="text-white">Keep Your Finances</p>
                     <p>Flowing Smoothly</p>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-4">Quick Links</h3>
+                    <h3 className="font-bold text-base md:text-lg mb-4">Quick Links</h3>
                     <ul className="space-y-2 text-white">
                       <li>Dashboard</li>
                       <li>About Us</li>
@@ -521,18 +521,18 @@ const AboutUs = () => {
                     </ul>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-4">Contact Us</h3>
+                    <h3 className="font-bold text-base md:text-lg mb-4">Contact Us</h3>
                     <p className="text-white">info@FinanceFlow.com</p>
                     <p className="text-white">(+63) 9363 6327 333</p>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-4">Follow Us</h3>
+                    <h3 className="font-bold text-base md:text-lg mb-4">Follow Us</h3>
                     <p className="text-white">Instagram</p>
                     <p className="text-white">Facebook</p>
                   </div>
                 </div>
                 <Separator className="my-8 bg-gray-800" />
-                <p className="text-center text-gray-400 text-sm">
+                <p className="text-center text-gray-400 text-base md:text-sm">
                   © {new Date().getFullYear()} Financial Expert. All rights
                   reserved.
                 </p>

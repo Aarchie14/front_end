@@ -49,12 +49,12 @@ import {
 
 // Sample data for Income vs Expenses chart
 const data = [
-  { day: "Mon", income: 3000, expenses: 2000 },
-  { day: "Tue", income: 2500, expenses: 2200 },
-  { day: "Wed", income: 7000, expenses: 5000 },
-  { day: "Thur", income: 4000, expenses: 3500 },
-  { day: "Fri", income: 4500, expenses: 4000 },
-  { day: "Sat", income: 5000, expenses: 4500 },
+  { day: "Oct", income: 10000, expenses: 8342 },
+  { day: "Nov", income: 8746, expenses: 4328 },
+  { day: "Dec", income: 9342, expenses: 8828 },
+  { day: "Jan", income: 11735, expenses: 11314 },
+  { day: "Feb", income: 15000, expenses: 12984. },
+  { day: "Mar", income: 16500, expenses: 4965 },
 ];
 
 const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
@@ -354,8 +354,8 @@ const Dashboard = () => {
 
           {/* Stats Cards */}
           <div className="text-base sm:text-lg md:text-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
-            <StatCard title="Total Income" amount="₱100.00" />
-            <StatCard title="Total Expenses" amount="₱100.00" />
+            <StatCard title="Total Income" amount="₱16,500.00" />
+            <StatCard title="Total Expenses" amount="₱4,965.00" />
           </div>
 
           {/* Income vs Expenses Chart */}
@@ -436,10 +436,29 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
+
+          <div className="grid grid-cols-2 gap-4 mt-6">
+            {/* Recent Changes */}
+            <div className=" p-4 bg-white shadow-lg rounded-2xl">
+              <h2 className="text-lg font-bold">Recent Changes</h2>
+              <ul className="mt-2 text-sm">
+                <li>₱5,000 added from Salary</li>
+                <li>₱800 deducted for Grocery Shopping</li>
+                <li>₱150 deducted for Coffee</li>
+              </ul>
+            </div>
+
+            {/* My Goals */}
+            <div className="p-4 bg-white shadow-lg rounded-2xl">
+              <h2 className="text-lg font-bold">My Goals</h2>
+              <ul className="mt-2 text-sm">
+                <li>Emergency Fund</li>
+                <li>Vacation: Siargao</li>
+              </ul>
+            </div>
+          </div>
         </main>
       </div>
-
-      
 
       {/* Overlay for mobile when sidebar is open */}
       {isSidebarOpen && (

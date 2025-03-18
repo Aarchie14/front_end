@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Avatar } from "@/components/ui/avatar";
+import { useFinance } from "../context/FinanceContext";
 import { Link } from "react-router-dom";
 import {
   Home,
@@ -89,21 +90,21 @@ const Income = () => {
     {
       id: 1,
       type: "Pay Check",
-      amount: 5000,
+      amount: 15000,
       fill: "hsl(215, 100%, 50%)",
       color: "hsl(215, 100%, 50%)",
     },
     {
       id: 2,
       type: "Business",
-      amount: 3000,
+      amount: 1000,
       fill: "hsl(0, 100%, 65%)",
       color: "hsl(0, 100%, 65%)",
     },
     {
       id: 3,
-      type: "Side Hustle",
-      amount: 1000,
+      type: "Freelance",
+      amount: 500,
       fill: "hsl(135, 75%, 55%)",
       color: "hsl(135, 75%, 55%)",
     },
@@ -161,7 +162,7 @@ const Income = () => {
     setIncomeData((prevData) =>
       prevData.map((item) =>
         item.id === id ? { ...item, type: newType } : item
-      )
+      ) 
     );
   };
 

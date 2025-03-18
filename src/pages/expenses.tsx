@@ -88,24 +88,31 @@ const Expenses = () => {
   const [ExpenseData, setExpenseData] = useState([
     {
       id: 1,
-      type: "Groceries",
-      amount: 5000,
+      type: "Rent",
+      amount: 1200,
       fill: "hsl(215, 100%, 50%)",
       color: "hsl(215, 100%, 50%)",
     },
     {
       id: 2,
-      type: "Investments",
-      amount: 2000,
+      type: "Savings",
+      amount: 3200,
       fill: "hsl(0, 100%, 65%)",
       color: "hsl(0, 100%, 65%)",
     },
     {
       id: 3,
       type: "Transport",
-      amount: 500,
+      amount: 115,
       fill: "hsl(135, 75%, 55%)",
       color: "hsl(135, 75%, 55%)",
+    },
+    {
+      id: 4,
+      type: "Groceries",
+      amount: 450,
+      fill: "hsl(270, 70%, 60%)",
+      color: "hsl(270, 70%, 60%)",
     },
   ]);
 
