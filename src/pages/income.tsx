@@ -273,40 +273,43 @@ const Income = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <CardContent className="text-center flex-1">
+        <CardContent className="text-center flex-1 p-4">
           {isEditing ? (
-            <>
-              <div className="flex items-center justify-center mt-2">
+            <div className="flex flex-col space-y-4">
+              <div className="flex items-center justify-center">
                 <Input
                   type="text"
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-54 mb-2 text-black font-semibold bg-white"
+                  className="w-full max-w-xs text-black font-semibold bg-white"
                   placeholder="Income source name"
                 />
               </div>
-              <div className="flex items-center justify-center mt-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
                 <Input
                   type="number"
                   value={editAmount}
                   onChange={(e) => setEditAmount(e.target.value)}
-                  className="w-32 mr-2 text-black bg-white"
+                  className="w-full max-w-xs sm:w-32 text-black bg-white"
                 />
                 <Button
                   onClick={handleSave}
-                  className="bg-white text-black hover:bg-gray-200"
+                  className="w-full sm:w-auto bg-white text-black hover:bg-gray-200"
                 >
-                  <Save size={16} />
+                  <Save size={16} className="mr-2" />
+                  <span>Save</span>
                 </Button>
               </div>
-            </>
+            </div>
           ) : (
-            <>
-              <h2 className="text-lg font-semibold text-white">{title}</h2>
-              <p className="text-2xl font-bold text-white">
+            <div className="py-2">
+              <h2 className="text-lg md:text-xl font-semibold text-white">
+                {title}
+              </h2>
+              <p className="text-xl md:text-2xl font-bold text-white mt-2">
                 {formatCurrency(amount)}
               </p>
-            </>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -453,7 +456,7 @@ const Income = () => {
                 <Menu size={24} />
               </Button>
               <h1 className="text-base sm:text-lg md:text-xl font-bold">
-                Income Overview
+                Income
               </h1>
             </div>
 

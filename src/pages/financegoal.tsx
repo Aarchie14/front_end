@@ -540,7 +540,7 @@ const FinanceGoal = () => {
                 <Menu size={24} />
               </Button>
               <h1 className="text-base sm:text-lg md:text-xl font-bold">
-                Financial Goal Overview
+                Financial Goal 
               </h1>
             </div>
 
