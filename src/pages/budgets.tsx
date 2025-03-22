@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -8,12 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -116,7 +111,12 @@ interface NavItemProps {
 }
 
 const BudgetPage = () => {
-  const NavItem = ({ icon: Icon, label, active, isSidebarOpen }: NavItemProps) => (
+  const NavItem = ({
+    icon: Icon,
+    label,
+    active,
+    isSidebarOpen,
+  }: NavItemProps) => (
     <div
       className={`group relative flex items-center gap-3 px-4 py-3
       rounded-lg cursor-pointer transition-all ${
@@ -124,8 +124,9 @@ const BudgetPage = () => {
       } hover:text-indigo-900 hover:font-medium`}
     >
       {active && (
-        <div className="absolute left-0 top-0 h-full w-1 bg-indigo-900
-        rounded-r-md" 
+        <div
+          className="absolute left-0 top-0 h-full w-1 bg-indigo-900
+        rounded-r-md"
         />
       )}
       <Icon
@@ -135,7 +136,8 @@ const BudgetPage = () => {
         } group-hover:text-indigo-900`}
       />
       {isSidebarOpen && (
-        <span className="transition-opacity duration-200 opacity-100
+        <span
+          className="transition-opacity duration-200 opacity-100
         group-hover:opacity-100"
         >
           {label}
@@ -143,7 +145,7 @@ const BudgetPage = () => {
       )}
     </div>
   );
-  
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Default closed on mobile
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activePeriod, setActivePeriod] = useState("monthly");
@@ -155,17 +157,17 @@ const BudgetPage = () => {
   const [deleteBudgetAlertOpen, setDeleteBudgetAlertOpen] = useState(false);
   const [currentBudgetId, setCurrentBudgetId] = useState(1);
   const [activeChartView] = useState("bar"); // "bar" or "pie"
-  
+
   // State for new budget form
   const [newBudgetName, setNewBudgetName] = useState("");
   const [newBudgetPeriod, setNewBudgetPeriod] = useState("monthly");
-  
+
   // State for new budget item form
   const [newItemCategory, setNewItemCategory] = useState("");
   const [newItemPlanned, setNewItemPlanned] = useState("");
   const [editingBudgetId, setEditingBudgetId] = useState<number | null>(null);
   const navigate = useNavigate();
-  
+
   // Sample data for budgets
   const [budgets, setBudgets] = useState<Budget[]>([
     {
@@ -274,14 +276,33 @@ const BudgetPage = () => {
       ],
     },
   ]);
-  
+
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initial check
+    checkIfMobile();
+
+    // Add event listener
+    window.addEventListener("resize", checkIfMobile);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  
+
   const addNewBudget = () => {
     if (!newBudgetName || !newBudgetPeriod) return;
-    const newId = budgets.length > 0 ? Math.max(...budgets.map((b) => b.id)) + 1 : 1;
+    const newId =
+      budgets.length > 0 ? Math.max(...budgets.map((b) => b.id)) + 1 : 1;
     const newBudget: Budget = {
       id: newId,
       name: newBudgetName,
@@ -298,15 +319,16 @@ const BudgetPage = () => {
     setCurrentBudgetId(newId);
     setActivePeriod(newBudgetPeriod);
   };
-  
+
   const addNewBudgetItem = () => {
     if (!newItemCategory || !newItemPlanned || !editingBudgetId) return;
     const updatedBudgets = budgets.map((budget) => {
       if (budget.id === editingBudgetId) {
         const newItem = {
-          id: budget.items.length > 0
-            ? Math.max(...budget.items.map((item) => item.id)) + 1
-            : 1,
+          id:
+            budget.items.length > 0
+              ? Math.max(...budget.items.map((item) => item.id)) + 1
+              : 1,
           category: newItemCategory,
           planned: parseFloat(newItemPlanned),
           actual: 0,
@@ -336,7 +358,7 @@ const BudgetPage = () => {
     setNewItemPlanned("");
     setNewItemDialogOpen(false);
   };
-  
+
   const handleDeleteItem = () => {
     if (!itemToDelete || !editingBudgetId) return;
     const updatedBudgets = budgets.map((budget) => {
@@ -365,7 +387,7 @@ const BudgetPage = () => {
     setItemToDelete(null);
     setDeleteAlertOpen(false);
   };
-  
+
   const handleDeleteBudget = () => {
     if (!budgetToDelete) return;
     const updatedBudgets = budgets.filter(
@@ -382,19 +404,23 @@ const BudgetPage = () => {
     setBudgetToDelete(null);
     setDeleteBudgetAlertOpen(false);
   };
-  
+
   // Filter budgets by period type
   const filteredBudgets = budgets.filter(
     (budget) => budget.period === activePeriod
   );
-  
+
   // Get current budget
   const currentBudget =
     budgets.find((budget) => budget.id === currentBudgetId) ||
     filteredBudgets[0];
-  
+
   // Function to update budget category spending
-  const updateActualSpending = (budgetId: number, itemId: number, amount: string) => {
+  const updateActualSpending = (
+    budgetId: number,
+    itemId: number,
+    amount: string
+  ) => {
     const updatedBudgets = budgets.map((budget) => {
       if (budget.id === budgetId) {
         const updatedItems = budget.items.map((item) => {
@@ -428,7 +454,7 @@ const BudgetPage = () => {
     });
     setBudgets(updatedBudgets);
   };
-  
+
   // Calculate overall budget status
   const getBudgetStatus = (budget: Budget | undefined) => {
     if (!budget) return { status: "N/A", color: "gray" };
@@ -444,12 +470,12 @@ const BudgetPage = () => {
       return { status: "Good", color: "green" };
     }
   };
-  
+
   // Get current budget status
   const currentStatus = currentBudget
     ? getBudgetStatus(currentBudget)
     : { status: "N/A", color: "gray" };
-  
+
   // Prepare chart data
   const prepareChartData = () => {
     if (!currentBudget || currentBudget.items.length === 0) return [];
@@ -460,7 +486,7 @@ const BudgetPage = () => {
       remaining: item.remaining,
     }));
   };
-  
+
   // Prepare pie chart data
   const preparePieChartData = () => {
     if (!currentBudget || currentBudget.items.length === 0) return [];
@@ -469,7 +495,7 @@ const BudgetPage = () => {
       value: item.actual > 0 ? item.actual : 0,
     }));
   };
-  
+
   const [fullName, setFullName] = useState("Test User");
   const [email, setEmail] = useState("test@example.com");
   const [username, setUsername] = useState("TestUser");
@@ -478,7 +504,6 @@ const BudgetPage = () => {
   const [emailNotifications, setEmailNotifications] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const currencySymbol = "₱"; // Change to your preferred currency
-  
 
   return (
     <div className="flex h-screen bg-indigo-100 overflow-hidden">
@@ -503,16 +528,36 @@ const BudgetPage = () => {
         {/* Sidebar Navigation */}
         <nav className="mt-6 space-y-2">
           <Link to="/dashboard">
-            <NavItem icon={Home} label="Dashboard" active={false} isSidebarOpen={true} />
+            <NavItem
+              icon={Home}
+              label="Dashboard"
+              active={false}
+              isSidebarOpen={true}
+            />
           </Link>
           <Link to="/income">
-            <NavItem icon={Wallet} label="Income" active={false} isSidebarOpen={true} />
+            <NavItem
+              icon={Wallet}
+              label="Income"
+              active={false}
+              isSidebarOpen={true}
+            />
           </Link>
           <Link to="/expenses">
-            <NavItem icon={CreditCard} label="Expenses" active={false} isSidebarOpen={true} />
+            <NavItem
+              icon={CreditCard}
+              label="Expenses"
+              active={false}
+              isSidebarOpen={true}
+            />
           </Link>
           <Link to="/financegoal">
-            <NavItem icon={Goal} label="Goals" active={false} isSidebarOpen={true} />
+            <NavItem
+              icon={Goal}
+              label="Goals"
+              active={false}
+              isSidebarOpen={true}
+            />
           </Link>
           <Link to="/budgets">
             <NavItem
@@ -583,29 +628,30 @@ const BudgetPage = () => {
                       </DropdownMenuItem>
                     </PopoverTrigger>
                     <PopoverContent
-                      side="right"
-                      align="start"
-                      className="w-80 p-4 bg-white shadow-lg rounded-md"
+                      side={isMobile ? "bottom" : "right"}
+                      align={isMobile ? "center" : "start"}
+                      className="w-[60vw] max-w-xs sm:max-w-sm md:w-80 p-3 sm:p-4 bg-white shadow-lg rounded-md"
+                      sideOffset={isMobile ? 5 : 10}
                     >
-                      {/* ✅ Section: Personal Information */}
-                      <h2 className="text-xl font-semibold">
+                      {/* Personal Information */}
+                      <h2 className="text-lg sm:text-xl font-semibold">
                         Personal Information
                       </h2>
-                      <div className="relative mt-2 p-4 rounded-lg border bg-gray-100">
-                        {/* ✅ Toggle between Settings and Save button */}
+                      <div className="relative mt-2 p-3 sm:p-4 pb-2 rounded-lg border bg-gray-100">
+                        {/* Toggle button - with more space below content */}
                         <button
-                          className="absolute bottom-3 right-2 text-gray-600 hover:text-gray-800"
+                          className="absolute bottom-2 right-2 text-gray-600 hover:text-gray-800"
                           onClick={() => setIsEditing(!isEditing)}
                         >
                           {isEditing ? (
-                            <Save className="w-5 h-5" />
+                            <Save className="w-4 h-4 sm:w-5 sm:h-5" />
                           ) : (
-                            <Settings className="w-5 h-5" />
+                            <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
                           )}
                         </button>
 
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="h-16 w-16">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0">
+                          <Avatar className="h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0">
                             <img
                               src={userimg}
                               alt="User"
@@ -613,50 +659,56 @@ const BudgetPage = () => {
                             />
                           </Avatar>
 
-                          <div className="w-full">
-                            {isEditing ? ( // ✅ If in edit mode, show input fields
-                              <>
+                          <div className="w-full overflow-hidden">
+                            {isEditing ? (
+                              <div className="flex flex-col space-y-2 mb-6">
                                 <input
                                   type="text"
-                                  className="w-40 px-2 py-1 border rounded-md"
+                                  className="w-full px-2 py-1 text-sm sm:text-base border rounded-md"
                                   value={fullName}
                                   onChange={(e) => setFullName(e.target.value)}
+                                  placeholder="Full Name"
                                 />
                                 <input
                                   type="email"
-                                  className="w-40 mt-2 px-2 py-1 border rounded-md"
+                                  className="w-full px-2 py-1 text-sm sm:text-base border rounded-md"
                                   value={email}
                                   onChange={(e) => setEmail(e.target.value)}
+                                  placeholder="Email"
                                 />
                                 <input
                                   type="text"
-                                  className="w-40 mt-2 px-2 py-1 border rounded-md"
+                                  className="w-full px-2 py-1 text-sm sm:text-base border rounded-md"
                                   value={username}
                                   onChange={(e) => setUsername(e.target.value)}
+                                  placeholder="Username"
                                 />
-                              </>
+                              </div>
                             ) : (
-                              // ✅ Otherwise, display text
-                              <>
-                                <p className="text-lg font-bold">{fullName}</p>
-                                <p className="text-sm text-gray-600">{email}</p>
-                                <p className="text-sm text-gray-600">
+                              <div className="overflow-hidden">
+                                <p className="text-base sm:text-lg font-bold truncate">
+                                  {fullName}
+                                </p>
+                                <p className="text-xs sm:text-sm text-gray-600 truncate">
+                                  {email}
+                                </p>
+                                <p className="text-xs sm:text-sm text-gray-600 truncate">
                                   Username: {username}
                                 </p>
-                              </>
+                              </div>
                             )}
                           </div>
                         </div>
                       </div>
 
-                      {/* ✅ Section: Notification Settings */}
-                      <div className="mt-4 p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
-                        <div>
-                          <h3 className="text-md font-semibold">
+                      {/* Notification Settings */}
+                      <div className="mt-3 sm:mt-4 p-3 sm:p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
+                        <div className="flex-1 pr-2">
+                          <h3 className="text-sm sm:text-md font-semibold">
                             Notification Settings
                           </h3>
-                          <p className="text-sm text-gray-600">
-                            Manage how you receive alerts and notifications
+                          <p className="text-xs sm:text-sm text-gray-600">
+                            Manage how you receive alerts
                           </p>
                         </div>
                         <Switch
@@ -665,14 +717,14 @@ const BudgetPage = () => {
                         />
                       </div>
 
-                      {/* ✅ Section: Email Notifications */}
-                      <div className="mt-2 p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
-                        <div>
-                          <h3 className="text-md font-semibold">
+                      {/* Email Notifications */}
+                      <div className="mt-2 p-3 sm:p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
+                        <div className="flex-1 pr-2">
+                          <h3 className="text-sm sm:text-md font-semibold">
                             Email Notifications
                           </h3>
-                          <p className="text-sm text-gray-600">
-                            Receive weekly summaries and important alerts
+                          <p className="text-xs sm:text-sm text-gray-600">
+                            Weekly summaries and alerts
                           </p>
                         </div>
                         <Switch
@@ -722,7 +774,6 @@ const BudgetPage = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-
           {/* Budget Type Tabs */}
           <div className="flex justify-between items-center mb-6">
             <Tabs
@@ -754,7 +805,6 @@ const BudgetPage = () => {
               <Plus className="mr-2 h-4 w-4" /> New Budget
             </Button>
           </div>
-
           {/* Budget Selection */}
           {filteredBudgets.length > 0 ? (
             <div className="mb-6">
@@ -808,462 +858,461 @@ const BudgetPage = () => {
               </CardContent>
             </Card>
           )}
-
-// Complete component with this fix applied:
-{/* Current Budget Overview */}
-{currentBudget && (
-  <Card className="mb-6">
-    <CardHeader>
-      <CardTitle className="flex justify-between">
-        <span>{currentBudget.name} Overview</span>
-        <span
-          className={`text-sm py-1 px-3 rounded-full ${
-            currentStatus.color === "green"
-              ? "bg-green-100 text-green-800"
-              : currentStatus.color === "orange"
-              ? "bg-orange-100 text-orange-800"
-              : currentStatus.color === "red"
-              ? "bg-red-100 text-red-800"
-              : "bg-gray-100 text-gray-800"
-          }`}
-        >
-          {currentStatus.status}
-        </span>
-      </CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-        <div className="bg-gray-100 p-4 rounded-lg">
-          <h3 className="text-sm text-indigo-700 mb-1">
-            Planned Budget
-          </h3>
-          <p className="text-2xl font-bold">
-            {currencySymbol}
-            {currentBudget.totalPlanned.toFixed(2)}
-          </p>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg">
-          <h3 className="text-sm text-indigo-700 mb-1">
-            Money Spent
-          </h3>
-          <p className="text-2xl font-bold">
-            {currencySymbol}
-            {currentBudget.totalActual.toFixed(2)}
-          </p>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg">
-          <h3 className="text-sm text-indigo-700 mb-1">
-            Remaining Money
-          </h3>
-          <p className="text-2xl font-bold">
-            {currencySymbol}
-            {(
-              currentBudget.totalPlanned - currentBudget.totalActual
-            ).toFixed(2)}
-          </p>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-)}
-
-{/* Budget Visualization and Categories in one row */}
-{currentBudget && (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-    {/* Budget Visualization Card */}
-    <Card className="h-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Budget Visualization</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {currentBudget.items.length > 0 ? (
-          <div className="w-full h-96 ">
-            <ResponsiveContainer width="100%" height="100%">
-              {activeChartView === "bar" ? (
-                <RechartsBarChart
-                  data={prepareChartData()}
-                  margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 70,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="name"
-                    angle={-45}
-                    textAnchor="end"
-                    height={70}
-                  />
-                  <YAxis />
-                  <Tooltip formatter={(value) => `${currencySymbol}${value}`} />
-                  <Legend verticalAlign="top" />
-                  <Bar
-                    dataKey="planned"
-                    name="Budget"
-                    fill="#8884d8"
-                  />
-                  <Bar dataKey="actual" name="Spent" fill="#82ca9d" />
-                </RechartsBarChart>
-              ) : (
-                <RechartsPieChart>
-                  <Pie
-                    data={preparePieChartData()}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={true}
-                    label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
-                    }
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
+          // Complete component with this fix applied:
+          {/* Current Budget Overview */}
+          {currentBudget && (
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="flex justify-between">
+                  <span>{currentBudget.name} Overview</span>
+                  <span
+                    className={`text-sm py-1 px-3 rounded-full ${
+                      currentStatus.color === "green"
+                        ? "bg-green-100 text-green-800"
+                        : currentStatus.color === "orange"
+                        ? "bg-orange-100 text-orange-800"
+                        : currentStatus.color === "red"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
                   >
-                  </Pie>
-                  <Tooltip formatter={(value) => `${currencySymbol}${value}`} />
-                  <Legend />
-                </RechartsPieChart>
-              )}
-            </ResponsiveContainer>
-          </div>
-        ) : (
-          <div className="text-center py-6">
-            <p className="text-gray-500">
-              Add budget categories to see visualization.
-            </p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-
-    {/* Budget Categories Card */}
-    <Card className="h-full flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Budget Categories</CardTitle>
-        <Button
-          className="bg-indigo-400 hover:bg-indigo-600"
-          onClick={() => {
-            setEditingBudgetId(currentBudget.id);
-            setNewItemDialogOpen(true);
-          }}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Add Category
-        </Button>
-      </CardHeader>
-      <CardContent className="flex-grow overflow-auto">
-        {currentBudget.items.length > 0 ? (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Category</TableHead>
-                  <TableHead className="text-center">
-                    Budget
-                  </TableHead>
-                  <TableHead className="text-center">Spent</TableHead>
-                  <TableHead className="text-center">
-                    Remaining
-                  </TableHead>
-                  <TableHead className="text-right">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currentBudget.items.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">
-                      {item.category}
-                    </TableCell>
-                    <TableCell className="text-center">
+                    {currentStatus.status}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+                  <div className="bg-gray-100 p-4 rounded-lg">
+                    <h3 className="text-sm text-indigo-700 mb-1">
+                      Planned Budget
+                    </h3>
+                    <p className="text-2xl font-bold">
                       {currencySymbol}
-                      {item.planned.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex justify-center items-center gap-2">
-                        <Input
-                          type="number"
-                          value={item.actual}
-                          onChange={(e) =>
-                            updateActualSpending(
-                              currentBudget.id,
-                              item.id,
-                              e.target.value
-                            )
-                          }
-                          className="w-20 text-right"
-                        />
+                      {currentBudget.totalPlanned.toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="bg-gray-100 p-4 rounded-lg">
+                    <h3 className="text-sm text-indigo-700 mb-1">
+                      Money Spent
+                    </h3>
+                    <p className="text-2xl font-bold">
+                      {currencySymbol}
+                      {currentBudget.totalActual.toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="bg-gray-100 p-4 rounded-lg">
+                    <h3 className="text-sm text-indigo-700 mb-1">
+                      Remaining Money
+                    </h3>
+                    <p className="text-2xl font-bold">
+                      {currencySymbol}
+                      {(
+                        currentBudget.totalPlanned - currentBudget.totalActual
+                      ).toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          {/* Budget Visualization and Categories in one row */}
+          {currentBudget && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              {/* Budget Visualization Card */}
+              <Card className="h-full">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>Budget Visualization</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {currentBudget.items.length > 0 ? (
+                    <div className="w-full h-96 ">
+                      <ResponsiveContainer width="100%" height="100%">
+                        {activeChartView === "bar" ? (
+                          <RechartsBarChart
+                            data={prepareChartData()}
+                            margin={{
+                              top: 20,
+                              right: 30,
+                              left: 20,
+                              bottom: 70,
+                            }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              dataKey="name"
+                              angle={-45}
+                              textAnchor="end"
+                              height={70}
+                            />
+                            <YAxis />
+                            <Tooltip
+                              formatter={(value) => `${currencySymbol}${value}`}
+                            />
+                            <Legend verticalAlign="top" />
+                            <Bar
+                              dataKey="planned"
+                              name="Budget"
+                              fill="#8884d8"
+                            />
+                            <Bar dataKey="actual" name="Spent" fill="#82ca9d" />
+                          </RechartsBarChart>
+                        ) : (
+                          <RechartsPieChart>
+                            <Pie
+                              data={preparePieChartData()}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={true}
+                              label={({ name, percent }) =>
+                                `${name}: ${(percent * 100).toFixed(0)}%`
+                              }
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                            ></Pie>
+                            <Tooltip
+                              formatter={(value) => `${currencySymbol}${value}`}
+                            />
+                            <Legend />
+                          </RechartsPieChart>
+                        )}
+                      </ResponsiveContainer>
+                    </div>
+                  ) : (
+                    <div className="text-center py-6">
+                      <p className="text-gray-500">
+                        Add budget categories to see visualization.
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Budget Categories Card */}
+              <Card className="h-full flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>Budget Categories</CardTitle>
+                  <Button
+                    className="bg-indigo-400 hover:bg-indigo-600"
+                    onClick={() => {
+                      setEditingBudgetId(currentBudget.id);
+                      setNewItemDialogOpen(true);
+                    }}
+                  >
+                    <Plus className="mr-2 h-4 w-4" /> Add Category
+                  </Button>
+                </CardHeader>
+                <CardContent className="flex-grow overflow-auto">
+                  {currentBudget.items.length > 0 ? (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Category</TableHead>
+                            <TableHead className="text-center">
+                              Budget
+                            </TableHead>
+                            <TableHead className="text-center">Spent</TableHead>
+                            <TableHead className="text-center">
+                              Remaining
+                            </TableHead>
+                            <TableHead className="text-right">
+                              Actions
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {currentBudget.items.map((item) => (
+                            <TableRow key={item.id}>
+                              <TableCell className="font-medium">
+                                {item.category}
+                              </TableCell>
+                              <TableCell className="text-center">
+                                {currencySymbol}
+                                {item.planned.toFixed(2)}
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <div className="flex justify-center items-center gap-2">
+                                  <Input
+                                    type="number"
+                                    value={item.actual}
+                                    onChange={(e) =>
+                                      updateActualSpending(
+                                        currentBudget.id,
+                                        item.id,
+                                        e.target.value
+                                      )
+                                    }
+                                    className="w-20 text-right"
+                                  />
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                {currencySymbol}
+                                {item.remaining.toFixed(2)}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => {
+                                    setItemToDelete(item.id);
+                                    setEditingBudgetId(currentBudget.id);
+                                    setDeleteAlertOpen(true);
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4 text-red-500" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  ) : (
+                    <div className="text-center py-6">
+                      <p className="text-gray-500">
+                        No categories found. Add a category to get started.
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
+          {/* Tips and Suggestions */}
+          {currentBudget && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Tips & Suggestions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Dynamic suggestions based on budget status */}
+                  {currentBudget.totalActual >
+                    currentBudget.totalPlanned * 0.9 && (
+                    <div className="flex items-start space-x-2 p-3 bg-red-50 rounded-lg">
+                      <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium text-red-800">
+                          Budget Alert
+                        </h4>
+                        <p className="text-sm text-red-700">
+                          You've used{" "}
+                          {Math.round(
+                            (currentBudget.totalActual /
+                              currentBudget.totalPlanned) *
+                              100
+                          )}
+                          % of your total budget. Consider reducing spending in
+                          non-essential categories.
+                        </p>
                       </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {currencySymbol}
-                      {item.remaining.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          setItemToDelete(item.id);
-                          setEditingBudgetId(currentBudget.id);
-                          setDeleteAlertOpen(true);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-500" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        ) : (
-          <div className="text-center py-6">
-            <p className="text-gray-500">
-              No categories found. Add a category to get started.
-            </p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  </div>
-)}
+                    </div>
+                  )}
 
-{/* Tips and Suggestions */}
-{currentBudget && (
-  <Card>
-    <CardHeader>
-      <CardTitle>Tips & Suggestions</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div className="space-y-4">
-        {/* Dynamic suggestions based on budget status */}
-        {currentBudget.totalActual >
-          currentBudget.totalPlanned * 0.9 && (
-          <div className="flex items-start space-x-2 p-3 bg-red-50 rounded-lg">
-            <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-            <div>
-              <h4 className="font-medium text-red-800">
-                Budget Alert
-              </h4>
-              <p className="text-sm text-red-700">
-                You've used{" "}
-                {Math.round(
-                  (currentBudget.totalActual /
-                    currentBudget.totalPlanned) *
-                    100
-                )}
-                % of your total budget. Consider reducing spending in
-                non-essential categories.
-              </p>
-            </div>
-          </div>
-        )}
+                  {currentBudget.items.some((item) => item.progress > 90) && (
+                    <div className="flex items-start space-x-2 p-3 bg-amber-50 rounded-lg">
+                      <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium text-amber-800">
+                          Category Alert
+                        </h4>
+                        <p className="text-sm text-amber-700">
+                          Some categories are near or over their budget limits.
+                          Consider reallocating funds from categories with
+                          remaining budget.
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
-        {currentBudget.items.some((item) => item.progress > 90) && (
-          <div className="flex items-start space-x-2 p-3 bg-amber-50 rounded-lg">
-            <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
-            <div>
-              <h4 className="font-medium text-amber-800">
-                Category Alert
-              </h4>
-              <p className="text-sm text-amber-700">
-                Some categories are near or over their budget limits.
-                Consider reallocating funds from categories with
-                remaining budget.
-              </p>
-            </div>
-          </div>
-        )}
+                  {currentBudget.items.some((item) => item.progress === 0) && (
+                    <div className="flex items-start space-x-2 p-3 bg-indigo-50 rounded-lg">
+                      <AlertCircle className="h-5 w-5 text-indigo-500 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium text-indigo-800">
+                          Unused Categories
+                        </h4>
+                        <p className="text-sm text-indigo-700">
+                          Some categories have no spending yet. Remember to
+                          track all your expenses to keep your budget accurate.
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
-        {currentBudget.items.some((item) => item.progress === 0) && (
-          <div className="flex items-start space-x-2 p-3 bg-indigo-50 rounded-lg">
-            <AlertCircle className="h-5 w-5 text-indigo-500 mt-0.5" />
-            <div>
-              <h4 className="font-medium text-indigo-800">
-                Unused Categories
-              </h4>
-              <p className="text-sm text-indigo-700">
-                Some categories have no spending yet. Remember to
-                track all your expenses to keep your budget accurate.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* General tips */}
-        <div className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg">
-          <AlertCircle className="h-5 w-5 text-green-500 mt-0.5" />
-          <div>
-            <h4 className="font-medium text-green-800">Budget Tip</h4>
-            <p className="text-sm text-green-700">
-              Try the 50/30/20 rule: 50% of income on needs, 30% on
-              wants, and 20% on savings and debt repayment.
-            </p>
-          </div>
-        </div>
+                  {/* General tips */}
+                  <div className="flex items-start space-x-2 p-3 bg-green-50 rounded-lg">
+                    <AlertCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-green-800">Budget Tip</h4>
+                      <p className="text-sm text-green-700">
+                        Try the 50/30/20 rule: 50% of income on needs, 30% on
+                        wants, and 20% on savings and debt repayment.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </main>
       </div>
-    </CardContent>
-  </Card>
-)}
-</main>
-</div>
 
-{/* New Budget Dialog */}
-<Dialog open={newBudgetDialogOpen} onOpenChange={setNewBudgetDialogOpen}>
-<DialogContent className="sm:max-w-md">
-  <DialogHeader>
-    <DialogTitle>Create New Budget</DialogTitle>
-    <DialogDescription>
-      Add a new budget to track your spending.
-    </DialogDescription>
-  </DialogHeader>
-  <div className="grid gap-4 py-4">
-    <div className="grid grid-cols-4 items-center gap-4">
-      <Label htmlFor="budgetName" className="text-right">
-        Name
-      </Label>
-      <Input
-        id="budgetName"
-        value={newBudgetName}
-        onChange={(e) => setNewBudgetName(e.target.value)}
-        className="col-span-3"
-        placeholder="e.g., March 2025 Budget"
-      />
-    </div>
-    <div className="grid grid-cols-4 items-center gap-4">
-      <Label htmlFor="budgetPeriod" className="text-right">
-        Period
-      </Label>
-      <Select
-        value={newBudgetPeriod}
-        onValueChange={(value) => setNewBudgetPeriod(value)}
+      {/* New Budget Dialog */}
+      <Dialog open={newBudgetDialogOpen} onOpenChange={setNewBudgetDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Create New Budget</DialogTitle>
+            <DialogDescription>
+              Add a new budget to track your spending.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="budgetName" className="text-right">
+                Name
+              </Label>
+              <Input
+                id="budgetName"
+                value={newBudgetName}
+                onChange={(e) => setNewBudgetName(e.target.value)}
+                className="col-span-3"
+                placeholder="e.g., March 2025 Budget"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="budgetPeriod" className="text-right">
+                Period
+              </Label>
+              <Select
+                value={newBudgetPeriod}
+                onValueChange={(value) => setNewBudgetPeriod(value)}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select period" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="daily">Daily</SelectItem>
+                  <SelectItem value="weekly">Weekly</SelectItem>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setNewBudgetDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={addNewBudget}>Create Budget</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* New Budget Item Dialog */}
+      <Dialog open={newItemDialogOpen} onOpenChange={setNewItemDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add Budget Category</DialogTitle>
+            <DialogDescription>
+              Add a new category to your budget.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="categoryName" className="text-right">
+                Category
+              </Label>
+              <Input
+                id="categoryName"
+                value={newItemCategory}
+                onChange={(e) => setNewItemCategory(e.target.value)}
+                className="col-span-3"
+                placeholder="e.g., Groceries"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="plannedAmount" className="text-right">
+                Planned Amount
+              </Label>
+              <Input
+                id="plannedAmount"
+                type="number"
+                value={newItemPlanned}
+                onChange={(e) => setNewItemPlanned(e.target.value)}
+                className="col-span-3"
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setNewItemDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={addNewBudgetItem}>Add Category</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Category Alert */}
+      <AlertDialog open={deleteAlertOpen} onOpenChange={setDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Category</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this category and its data from your
+              budget.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteAlertOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteItem}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Budget Alert */}
+      <AlertDialog
+        open={deleteBudgetAlertOpen}
+        onOpenChange={setDeleteBudgetAlertOpen}
       >
-        <SelectTrigger className="col-span-3">
-          <SelectValue placeholder="Select period" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="daily">Daily</SelectItem>
-          <SelectItem value="weekly">Weekly</SelectItem>
-          <SelectItem value="monthly">Monthly</SelectItem>
-        </SelectContent>
-      </Select>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Budget</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this budget and all its categories.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteBudgetAlertOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteBudget}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
-  </div>
-  <DialogFooter>
-    <Button
-      variant="outline"
-      onClick={() => setNewBudgetDialogOpen(false)}
-    >
-      Cancel
-    </Button>
-    <Button onClick={addNewBudget}>Create Budget</Button>
-  </DialogFooter>
-</DialogContent>
-</Dialog>
-
-{/* New Budget Item Dialog */}
-<Dialog open={newItemDialogOpen} onOpenChange={setNewItemDialogOpen}>
-<DialogContent className="sm:max-w-md">
-  <DialogHeader>
-    <DialogTitle>Add Budget Category</DialogTitle>
-    <DialogDescription>
-      Add a new category to your budget.
-    </DialogDescription>
-  </DialogHeader>
-  <div className="grid gap-4 py-4">
-    <div className="grid grid-cols-4 items-center gap-4">
-      <Label htmlFor="categoryName" className="text-right">
-        Category
-      </Label>
-      <Input
-        id="categoryName"
-        value={newItemCategory}
-        onChange={(e) => setNewItemCategory(e.target.value)}
-        className="col-span-3"
-        placeholder="e.g., Groceries"
-      />
-    </div>
-    <div className="grid grid-cols-4 items-center gap-4">
-      <Label htmlFor="plannedAmount" className="text-right">
-        Planned Amount
-      </Label>
-      <Input
-        id="plannedAmount"
-        type="number"
-        value={newItemPlanned}
-        onChange={(e) => setNewItemPlanned(e.target.value)}
-        className="col-span-3"
-        placeholder="0.00"
-      />
-    </div>
-  </div>
-  <DialogFooter>
-    <Button
-      variant="outline"
-      onClick={() => setNewItemDialogOpen(false)}
-    >
-      Cancel
-    </Button>
-    <Button onClick={addNewBudgetItem}>Add Category</Button>
-  </DialogFooter>
-</DialogContent>
-</Dialog>
-
-{/* Delete Category Alert */}
-<AlertDialog open={deleteAlertOpen} onOpenChange={setDeleteAlertOpen}>
-<AlertDialogContent>
-  <AlertDialogHeader>
-    <AlertDialogTitle>Delete Category</AlertDialogTitle>
-    <AlertDialogDescription>
-      This will permanently delete this category and its data from your
-      budget.
-    </AlertDialogDescription>
-  </AlertDialogHeader>
-  <AlertDialogFooter>
-    <AlertDialogCancel onClick={() => setDeleteAlertOpen(false)}>
-      Cancel
-    </AlertDialogCancel>
-    <AlertDialogAction
-      onClick={handleDeleteItem}
-      className="bg-red-500 hover:bg-red-600 text-white"
-    >
-      Delete
-    </AlertDialogAction>
-  </AlertDialogFooter>
-</AlertDialogContent>
-</AlertDialog>
-
-{/* Delete Budget Alert */}
-<AlertDialog
-open={deleteBudgetAlertOpen}
-onOpenChange={setDeleteBudgetAlertOpen}
->
-<AlertDialogContent>
-  <AlertDialogHeader>
-    <AlertDialogTitle>Delete Budget</AlertDialogTitle>
-    <AlertDialogDescription>
-      This will permanently delete this budget and all its categories.
-      This action cannot be undone.
-    </AlertDialogDescription>
-  </AlertDialogHeader>
-  <AlertDialogFooter>
-    <AlertDialogCancel onClick={() => setDeleteBudgetAlertOpen(false)}>
-      Cancel
-    </AlertDialogCancel>
-    <AlertDialogAction
-      onClick={handleDeleteBudget}
-      className="bg-red-500 hover:bg-red-600 text-white"
-    >
-      Delete
-    </AlertDialogAction>
-  </AlertDialogFooter>
-</AlertDialogContent>
-</AlertDialog>
-</div>
-);
+  );
 };
 
 export default BudgetPage;
-

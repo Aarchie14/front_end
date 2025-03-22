@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Home,
   Wallet,
@@ -46,17 +47,32 @@ import {
   CartesianGrid,
 } from "recharts";
 
+// Define types for the data structure
+interface ChartData {
+  day: string;
+  income: number;
+  expenses: number;
+}
+
 // Sample data for Income vs Expenses chart
-const data = [
-  { day: "Mon", income: 3000, expenses: 2000 },
-  { day: "Tue", income: 2500, expenses: 2200 },
-  { day: "Wed", income: 7000, expenses: 5000 },
-  { day: "Thur", income: 4000, expenses: 3500 },
-  { day: "Fri", income: 4500, expenses: 4000 },
-  { day: "Sat", income: 5000, expenses: 4500 },
+const data: ChartData[] = [
+  { day: "Oct", income: 10000, expenses: 8342 },
+  { day: "Nov", income: 8746, expenses: 4328 },
+  { day: "Dec", income: 9342, expenses: 8828 },
+  { day: "Jan", income: 11735, expenses: 11314 },
+  { day: "Feb", income: 15000, expenses: 12984 },
+  { day: "Mar", income: 16500, expenses: 4965 },
 ];
 
-const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
+// Define prop types for the NavItem component
+interface NavItemProps {
+  icon: React.ElementType;
+  label: string;
+  active?: boolean;
+  isSidebarOpen: boolean;
+}
+
+const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, active, isSidebarOpen }) => (
   <div
     className={`group relative flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all ${
       active ? "text-indigo-900 font-medium" : "text-gray-400"
@@ -79,7 +95,13 @@ const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
   </div>
 );
 
-const StatCard = ({ title, amount }) => (
+// Define prop types for the StatCard component
+interface StatCardProps {
+  title: string;
+  amount: string;
+}
+
+const StatCard: React.FC<StatCardProps> = ({ title, amount }) => (
   <Card className="p-4 bg-white shadow-lg rounded-2xl">
     <CardContent className="text-center">
       <h2 className="text-lg font-semibold text-gray-700">{title}</h2>
@@ -88,26 +110,22 @@ const StatCard = ({ title, amount }) => (
   </Card>
 );
 
-const Dashboard = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Default closed on mobile
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+const Dashboard: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false); // Default closed on mobile
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = (): void => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleLogout = () => {
-    console.log("User logged out");
-    // Add actual logout logic here (e.g., clear auth token, redirect to login)
-  };
-
-  const [fullName, setFullName] = useState("Test User");
-  const [email, setEmail] = useState("test@example.com");
-  const [username, setUsername] = useState("TestUser");
-  const [isEditing, setIsEditing] = useState(false);
-  const [openPopover, setOpenPopover] = useState(false);
-  const [emailNotifications, setEmailNotifications] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [fullName, setFullName] = useState<string>("Test User");
+  const [email, setEmail] = useState<string>("test@example.com");
+  const [username, setUsername] = useState<string>("TestUser");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [openPopover, setOpenPopover] = useState<boolean>(false);
+  const [emailNotifications, setEmailNotifications] = useState<boolean>(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen bg-indigo-100 overflow-hidden">
@@ -131,16 +149,26 @@ const Dashboard = () => {
 
         {/* Sidebar Navigation */}
         <nav className="mt-6 space-y-2">
-          <NavItem
-            icon={Home}
-            label="Dashboard"
-            active
-            isSidebarOpen={true} // Always show labels in sidebar
-          />
-          <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
-          <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
-          <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
-          <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
+          <Link to="/dashboard">
+            <NavItem
+              icon={Home}
+              label="Dashboard"
+              active={true}
+              isSidebarOpen={true} // Always show labels in sidebar
+            />
+          </Link>
+          <Link to="/income">
+            <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
+          </Link>
+          <Link to="/expenses">
+            <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
+          </Link>
+          <Link to="/financegoal">
+            <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
+          </Link>
+          <Link to="/budgets">
+            <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
+          </Link>
         </nav>
       </aside>
 
@@ -165,10 +193,11 @@ const Dashboard = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="text-base sm:text-lg md:text-xl font-bold text-black hover:underline">
-                About Us
-              </button>
-
+              <Link to="/aboutus">
+                <button className="text-base sm:text-lg md:text-xl font-bold text-black hover:underline">
+                  About Us
+                </button>
+              </Link>
               {/* Avatar with Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -332,7 +361,7 @@ const Dashboard = () => {
                 </AlertDialogCancel>
                 <AlertDialogAction
                   className="bg-indigo-100 hover:bg-indigo-300 text-black"
-                  onClick={handleLogout}
+                  onClick={() => navigate("/login")}
                 >
                   Log Out
                 </AlertDialogAction>
@@ -342,8 +371,8 @@ const Dashboard = () => {
 
           {/* Stats Cards */}
           <div className="text-base sm:text-lg md:text-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
-            <StatCard title="Total Income" amount="₱100.00" />
-            <StatCard title="Total Expenses" amount="₱100.00" />
+            <StatCard title="Total Income" amount="₱16,500.00" />
+            <StatCard title="Total Expenses" amount="₱4,965.00" />
           </div>
 
           {/* Income vs Expenses Chart */}
@@ -352,7 +381,7 @@ const Dashboard = () => {
               <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2 sm:mb-3">
                 Income vs Expenses
               </h2>
-              <p className="ttext-base sm:text-lg md:text-xl text-gray-500 mb-4">
+              <p className="text-base sm:text-lg md:text-xl text-gray-500 mb-4">
                 Track your income and expenses over time with this interactive
                 chart.
               </p>
@@ -424,6 +453,27 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
+
+          <div className="grid grid-cols-2 gap-4 mt-6">
+            {/* Recent Changes */}
+            <div className=" p-4 bg-white shadow-lg rounded-2xl">
+              <h2 className="text-lg font-bold">Recent Changes</h2>
+              <ul className="mt-2 text-sm">
+                <li>₱5,000 added from Salary</li>
+                <li>₱800 deducted for Grocery Shopping</li>
+                <li>₱150 deducted for Coffee</li>
+              </ul>
+            </div>
+
+            {/* My Goals */}
+            <div className="p-4 bg-white shadow-lg rounded-2xl">
+              <h2 className="text-lg font-bold">My Goals</h2>
+              <ul className="mt-2 text-sm">
+                <li>Emergency Fund</li>
+                <li>Vacation: Siargao</li>
+              </ul>
+            </div>
+          </div>
         </main>
       </div>
 
