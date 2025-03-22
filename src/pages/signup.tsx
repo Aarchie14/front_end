@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import image from "@/assets/imgs/halfbg.webp";
@@ -28,17 +28,17 @@ const SignUpPage = () => {
     setShowPassword(!showPassword);
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     setPasswordMatch(e.target.value === confirmPassword);
   };
 
-  const handleConfirmPasswordChange = (e) => {
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
     setPasswordMatch(password === e.target.value);
   };
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.value));
   };
@@ -52,12 +52,12 @@ const SignUpPage = () => {
     >
       <Card className="w-full md:w-1/3 bg-[#dce4f2] flex flex-col relative h-full md:shadow-lg">
         <div className="absolute inset-0 md:hidden">
-          <img src={image} className="w-full h-full object-cover opacity-20" />
+          <img src={image} className="w-full h-full object-cover opacity-20" alt="Background" />
         </div>
 
         <CardContent className="flex flex-col items-center justify-center flex-grow px-6 sm:px-10 relative z-10">
           <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
-            <img src={logo} className="w-[90px] sm:w-[130px] h-auto" />
+            <img src={logo} className="w-[90px] sm:w-[130px] h-auto" alt="Logo" />
           </div>
 
           <div className="w-full max-w-[400px]">

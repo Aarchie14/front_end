@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Home,
   Wallet,
@@ -47,17 +47,32 @@ import {
   CartesianGrid,
 } from "recharts";
 
+// Define types for the data structure
+interface ChartData {
+  day: string;
+  income: number;
+  expenses: number;
+}
+
 // Sample data for Income vs Expenses chart
-const data = [
+const data: ChartData[] = [
   { day: "Oct", income: 10000, expenses: 8342 },
   { day: "Nov", income: 8746, expenses: 4328 },
   { day: "Dec", income: 9342, expenses: 8828 },
   { day: "Jan", income: 11735, expenses: 11314 },
-  { day: "Feb", income: 15000, expenses: 12984. },
+  { day: "Feb", income: 15000, expenses: 12984 },
   { day: "Mar", income: 16500, expenses: 4965 },
 ];
 
-const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
+// Define prop types for the NavItem component
+interface NavItemProps {
+  icon: React.ElementType;
+  label: string;
+  active?: boolean;
+  isSidebarOpen: boolean;
+}
+
+const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, active, isSidebarOpen }) => (
   <div
     className={`group relative flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all ${
       active ? "text-indigo-900 font-medium" : "text-gray-400"
@@ -80,7 +95,13 @@ const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
   </div>
 );
 
-const StatCard = ({ title, amount }) => (
+// Define prop types for the StatCard component
+interface StatCardProps {
+  title: string;
+  amount: string;
+}
+
+const StatCard: React.FC<StatCardProps> = ({ title, amount }) => (
   <Card className="p-4 bg-white shadow-lg rounded-2xl">
     <CardContent className="text-center">
       <h2 className="text-lg font-semibold text-gray-700">{title}</h2>
@@ -89,26 +110,22 @@ const StatCard = ({ title, amount }) => (
   </Card>
 );
 
-const Dashboard = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Default closed on mobile
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+const Dashboard: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false); // Default closed on mobile
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = (): void => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleLogout = () => {
-    console.log("User logged out");
-    // Add actual logout logic here (e.g., clear auth token, redirect to login)
-  };
-
-  const [fullName, setFullName] = useState("Test User");
-  const [email, setEmail] = useState("test@example.com");
-  const [username, setUsername] = useState("TestUser");
-  const [isEditing, setIsEditing] = useState(false);
-  const [openPopover, setOpenPopover] = useState(false);
-  const [emailNotifications, setEmailNotifications] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [fullName, setFullName] = useState<string>("Test User");
+  const [email, setEmail] = useState<string>("test@example.com");
+  const [username, setUsername] = useState<string>("TestUser");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [openPopover, setOpenPopover] = useState<boolean>(false);
+  const [emailNotifications, setEmailNotifications] = useState<boolean>(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen bg-indigo-100 overflow-hidden">
@@ -136,7 +153,7 @@ const Dashboard = () => {
             <NavItem
               icon={Home}
               label="Dashboard"
-              active
+              active={true}
               isSidebarOpen={true} // Always show labels in sidebar
             />
           </Link>
@@ -344,7 +361,7 @@ const Dashboard = () => {
                 </AlertDialogCancel>
                 <AlertDialogAction
                   className="bg-indigo-100 hover:bg-indigo-300 text-black"
-                  onClick={handleLogout}
+                  onClick={() => navigate("/login")}
                 >
                   Log Out
                 </AlertDialogAction>
@@ -364,7 +381,7 @@ const Dashboard = () => {
               <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-2 sm:mb-3">
                 Income vs Expenses
               </h2>
-              <p className="ttext-base sm:text-lg md:text-xl text-gray-500 mb-4">
+              <p className="text-base sm:text-lg md:text-xl text-gray-500 mb-4">
                 Track your income and expenses over time with this interactive
                 chart.
               </p>

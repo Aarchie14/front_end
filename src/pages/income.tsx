@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Avatar } from "@/components/ui/avatar";
-import { useFinance } from "../context/FinanceContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Home,
   Wallet,
@@ -49,7 +48,20 @@ import {
 } from "@/components/ui/card";
 
 const Income = () => {
-  const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
+  // Define proper types for the NavItem props
+  interface NavItemProps {
+    icon: React.ElementType;
+    label: string;
+    active?: boolean;
+    isSidebarOpen: boolean;
+  }
+
+  const NavItem = ({
+    icon: Icon,
+    label,
+    active,
+    isSidebarOpen,
+  }: NavItemProps) => (
     <div
       className={`group relative flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all ${
         active ? "text-indigo-900 font-medium" : "text-gray-400"
@@ -73,20 +85,31 @@ const Income = () => {
   );
 
   // Add ref for scroll container
-  const scrollContainerRef = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Function to scroll to bottom
   const scrollToBottom = () => {
     if (scrollContainerRef.current) {
       setTimeout(() => {
-        scrollContainerRef.current.scrollTop =
-          scrollContainerRef.current.scrollHeight;
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTop =
+            scrollContainerRef.current.scrollHeight;
+        }
       }, 100); // Small delay to ensure DOM updates
     }
   };
 
+  // Define proper type for income data
+  interface IncomeItem {
+    id: number;
+    type: string;
+    amount: number;
+    fill: string;
+    color: string;
+  }
+
   // Income data state
-  const [incomeData, setIncomeData] = useState([
+  const [incomeData, setIncomeData] = useState<IncomeItem[]>([
     {
       id: 1,
       type: "Pay Check",
@@ -111,7 +134,7 @@ const Income = () => {
   ]);
 
   // Format currency
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-PH", {
       style: "currency",
       currency: "PHP",
@@ -119,8 +142,17 @@ const Income = () => {
     }).format(amount);
   };
 
+  // Type for chart data
+  interface ChartDataItem {
+    name: string;
+    value: number;
+    fill: string;
+  }
+
+  const navigate = useNavigate();
+
   // Update chart data based on income data
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState<ChartDataItem[]>([]);
 
   useEffect(() => {
     // Filter out zero amounts to avoid empty sections in pie chart
@@ -134,8 +166,16 @@ const Income = () => {
     );
   }, [incomeData]);
 
+  // Properly typed chart config
+  interface ChartConfig {
+    [key: string]: {
+      label: string;
+      color?: string;
+    };
+  }
+
   // Create chart config from income data
-  const chartConfig = {
+  const chartConfig: ChartConfig = {
     value: {
       label: "Amount",
     },
@@ -149,7 +189,7 @@ const Income = () => {
   });
 
   // Update income amount handler
-  const updateIncomeAmount = (id, newAmount) => {
+  const updateIncomeAmount = (id: number, newAmount: string) => {
     setIncomeData((prevData) =>
       prevData.map((item) =>
         item.id === id ? { ...item, amount: parseFloat(newAmount) || 0 } : item
@@ -158,11 +198,11 @@ const Income = () => {
   };
 
   // Update income type handler
-  const updateIncomeType = (id, newType) => {
+  const updateIncomeType = (id: number, newType: string) => {
     setIncomeData((prevData) =>
       prevData.map((item) =>
         item.id === id ? { ...item, type: newType } : item
-      ) 
+      )
     );
   };
 
@@ -174,7 +214,7 @@ const Income = () => {
     const hue = hues[newId % hues.length];
     const newColor = `hsl(${hue}, 85%, 60%)`;
 
-    const newSource = {
+    const newSource: IncomeItem = {
       id: newId,
       type: "New Income Source",
       amount: 0,
@@ -189,15 +229,24 @@ const Income = () => {
   };
 
   // Delete income source
-  const deleteIncomeSource = (id) => {
+  const deleteIncomeSource = (id: number) => {
     setIncomeData((prevData) => prevData.filter((item) => item.id !== id));
   };
 
+  // Stat card props type
+  interface StatCardProps {
+    id: number;
+    title: string;
+    amount: number;
+    color: string;
+  }
+
   // Stat card with editable amount and title
-  const StatCard = ({ id, title, amount, color }) => {
+  const StatCard = ({ id, title, amount, color }: StatCardProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editAmount, setEditAmount] = useState(amount.toString());
     const [editTitle, setEditTitle] = useState(title);
+  
 
     const handleSave = () => {
       updateIncomeAmount(id, editAmount);
@@ -268,17 +317,6 @@ const Income = () => {
   // Other state variables
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const handleLogout = () => {
-    console.log("User logged out");
-    // Add actual logout logic here
-  };
-
   const [fullName, setFullName] = useState("Test User");
   const [email, setEmail] = useState("test@example.com");
   const [username, setUsername] = useState("TestUser");
@@ -287,11 +325,25 @@ const Income = () => {
   const [emailNotifications, setEmailNotifications] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   // Calculate total income
   const totalIncome = incomeData.reduce((sum, item) => sum + item.amount, 0);
 
+  // Custom tooltip props type
+  interface CustomTooltipProps {
+    active?: boolean;
+    payload?: Array<{
+      name: string;
+      value: number;
+      payload?: any;
+    }>;
+  }
+
   // Custom tooltip for pie chart
-  const CustomTooltip = ({ active, payload }) => {
+  const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-2 border rounded shadow">
@@ -310,7 +362,7 @@ const Income = () => {
   return (
     <div className="flex h-screen bg-indigo-100 overflow-hidden">
       {/* CSS Variables for chart colors */}
-      <style jsx>{`
+      <style>{`
         :root {
           --chart-1: 215, 100%, 50%; /* Blue for Income */
           --chart-2: 0, 100%, 65%; /* Red for Expenses */
@@ -411,6 +463,7 @@ const Income = () => {
                   align="end"
                   className="w-48 bg-white shadow-lg rounded-md"
                 >
+                  {/* ✅ Clicking View Profile opens the popover but doesn't close it when moving mouse */}
                   <Popover
                     open={openPopover}
                     onOpenChange={setOpenPopover}
@@ -418,7 +471,7 @@ const Income = () => {
                   >
                     <PopoverTrigger asChild>
                       <DropdownMenuItem
-                        onSelect={(e) => e.preventDefault()}
+                        onSelect={(e) => e.preventDefault()} // Prevents dropdown from closing
                         onClick={() => setOpenPopover(true)}
                       >
                         View Profile
@@ -429,11 +482,12 @@ const Income = () => {
                       align="start"
                       className="w-80 p-4 bg-white shadow-lg rounded-md"
                     >
-                      {/* Personal Information */}
+                      {/* ✅ Section: Personal Information */}
                       <h2 className="text-xl font-semibold">
                         Personal Information
                       </h2>
                       <div className="relative mt-2 p-4 rounded-lg border bg-gray-100">
+                        {/* ✅ Toggle between Settings and Save button */}
                         <button
                           className="absolute bottom-3 right-2 text-gray-600 hover:text-gray-800"
                           onClick={() => setIsEditing(!isEditing)}
@@ -455,7 +509,7 @@ const Income = () => {
                           </Avatar>
 
                           <div className="w-full">
-                            {isEditing ? (
+                            {isEditing ? ( // ✅ If in edit mode, show input fields
                               <>
                                 <input
                                   type="text"
@@ -477,6 +531,7 @@ const Income = () => {
                                 />
                               </>
                             ) : (
+                              // ✅ Otherwise, display text
                               <>
                                 <p className="text-lg font-bold">{fullName}</p>
                                 <p className="text-sm text-gray-600">{email}</p>
@@ -489,7 +544,7 @@ const Income = () => {
                         </div>
                       </div>
 
-                      {/* Notification Settings */}
+                      {/* ✅ Section: Notification Settings */}
                       <div className="mt-4 p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
                         <div>
                           <h3 className="text-md font-semibold">
@@ -505,7 +560,7 @@ const Income = () => {
                         />
                       </div>
 
-                      {/* Email Notifications */}
+                      {/* ✅ Section: Email Notifications */}
                       <div className="mt-2 p-4 rounded-lg border bg-gray-100 flex justify-between items-center">
                         <div>
                           <h3 className="text-md font-semibold">
@@ -555,7 +610,7 @@ const Income = () => {
                 </AlertDialogCancel>
                 <AlertDialogAction
                   className="bg-indigo-100 hover:bg-indigo-300 text-black"
-                  onClick={handleLogout}
+                  onClick={() => navigate("/login")}
                 >
                   Log Out
                 </AlertDialogAction>

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Home,
   Wallet,
@@ -45,9 +45,18 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { LucideIcon } from "lucide-react";
+
+// Define TypeScript interface for NavItem props
+interface NavItemProps {
+  icon: LucideIcon;
+  label: string;
+  active?: boolean;
+  isSidebarOpen: boolean;
+}
 
 const AboutUs = () => {
-  const NavItem = ({ icon: Icon, label, active, isSidebarOpen }) => (
+  const NavItem = ({ icon: Icon, label, active = false, isSidebarOpen }: NavItemProps) => (
     <div
       className={`group relative flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all ${
         active ? "text-indigo-900 font-medium" : "text-gray-400"
@@ -77,11 +86,6 @@ const AboutUs = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleLogout = () => {
-    console.log("User logged out");
-    // Add actual logout logic here (e.g., clear auth token, redirect to login)
-  };
-
   const [fullName, setFullName] = useState("Test User");
   const [email, setEmail] = useState("test@example.com");
   const [username, setUsername] = useState("TestUser");
@@ -89,6 +93,7 @@ const AboutUs = () => {
   const [openPopover, setOpenPopover] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="flex h-screen bg-indigo-100 overflow-hidden">
@@ -116,20 +121,41 @@ const AboutUs = () => {
             <NavItem
               icon={Home}
               label="Dashboard"
+              active={false}
               isSidebarOpen={true} // Always show labels in sidebar
             />
           </Link>
           <Link to="/income">
-            <NavItem icon={Wallet} label="Income" isSidebarOpen={true} />
+            <NavItem 
+              icon={Wallet} 
+              label="Income" 
+              active={false}
+              isSidebarOpen={true} 
+            />
           </Link>
           <Link to="/expenses">
-            <NavItem icon={CreditCard} label="Expenses" isSidebarOpen={true} />
+            <NavItem 
+              icon={CreditCard} 
+              label="Expenses" 
+              active={false}
+              isSidebarOpen={true} 
+            />
           </Link>
           <Link to="/financegoal">
-            <NavItem icon={Goal} label="Goals" isSidebarOpen={true} />
+            <NavItem 
+              icon={Goal} 
+              label="Goals" 
+              active={false}
+              isSidebarOpen={true} 
+            />
           </Link>
           <Link to="/budgets">
-            <NavItem icon={List} label="Budgets" isSidebarOpen={true} />
+            <NavItem 
+              icon={List} 
+              label="Budgets" 
+              active={false}
+              isSidebarOpen={true} 
+            />
           </Link>
         </nav>
       </aside>
@@ -157,7 +183,6 @@ const AboutUs = () => {
                   About Us
                 </button>
               </Link>
-              {/* Avatar with Dropdown */}
               {/* Avatar with Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -321,7 +346,7 @@ const AboutUs = () => {
                 </AlertDialogCancel>
                 <AlertDialogAction
                   className="bg-indigo-100 hover:bg-indigo-300 text-black"
-                  onClick={handleLogout}
+                  onClick={() => navigate("/login")}
                 >
                   Log Out
                 </AlertDialogAction>
@@ -376,10 +401,10 @@ const AboutUs = () => {
                     simplifies financial management for everyone.
                   </p>
                   <p className="mt-4 text-gray-700 text-base md-text-lg leading-relaxed text-justify">
-                    Since our launch, we’ve been committed to continuous
+                    Since our launch, we've been committed to continuous
                     innovation. We listen to our users, adapt to their needs,
                     and refine our platform to provide the best possible
-                    experience. Our story is just beginning, and we’re excited
+                    experience. Our story is just beginning, and we're excited
                     to be part of your financial journey.
                   </p>
                 </div>
@@ -403,7 +428,7 @@ const AboutUs = () => {
                   </p>
                   <p className="mt-4 text-gray-700 text-base md-text-lg leading-relaxed text-justify">
                     We believe that everyone deserves the opportunity to build a
-                    secure financial future. That’s why we are committed to
+                    secure financial future. That's why we are committed to
                     delivering a user-friendly, educational, and intuitive
                     platform that simplifies personal finance management.
                   </p>
@@ -448,7 +473,7 @@ const AboutUs = () => {
                   <h2 className="text-base md:text-3xl font-bold text-center mb-4">
                     Meet Our Team
                   </h2>
-                  <p className="text-gray-600 text-base md-text-lg leading-relaxed text-center text-justify mb-10">
+                  <p className="text-gray-600 text-base md-text-lg leading-relaxed text-justify mb-10">
                     Our dedicated team of finance enthusiasts, developers, and
                     customer support specialists is passionate about helping you
                     succeed. We are committed to continuously improving our
@@ -517,7 +542,6 @@ const AboutUs = () => {
                     <ul className="space-y-2 text-white">
                       <li>Dashboard</li>
                       <li>About Us</li>
-                      <li>Privacy & Terms</li>
                     </ul>
                   </div>
                   <div>

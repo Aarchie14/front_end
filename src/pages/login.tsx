@@ -31,7 +31,7 @@ const LoginPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   console.log("Trying to log in with:", email, password);
 
@@ -42,10 +42,7 @@ const LoginPage = () => {
     };
   }, []);
 
-  const handleLoginClick = () => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 1000);
-  };
+
 
   return (
     <motion.div
