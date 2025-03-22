@@ -669,7 +669,7 @@ const Expenses = () => {
             <div className="md:col-span-2">
               <Card className="min-h-[400px]">
                 <CardHeader>
-                  <CardTitle>Financial Overview</CardTitle>
+                  <CardTitle>Expenses Overview</CardTitle>
                   <CardDescription>
                     Breakdown of your expenses sources (Total:{" "}
                     {formatCurrency(totalExpense)})
@@ -686,11 +686,14 @@ const Expenses = () => {
                             nameKey="name"
                             cx="50%"
                             cy="50%"
-                            outerRadius={120} // Adjusted for balance
-                            label={({ name, percent }) =>
-                              `${name}: ${(percent * 100).toFixed(0)}%`
-                            }
-                            labelLine={true}
+                            outerRadius={isMobile ? 80 : 120}
+                            label={({ name, percent }) => {
+                              const percentage = (percent * 100).toFixed(0);
+                              return isMobile
+                                ? `${percentage}%`
+                                : `${name}: ${percentage}%`;
+                            }}
+                            labelLine={!isMobile}
                           >
                             {chartData.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={entry.fill} />

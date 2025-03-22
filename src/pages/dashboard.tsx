@@ -400,9 +400,10 @@ const Dashboard: React.FC = () => {
           </AlertDialog>
 
           {/* Stats Cards */}
-          <div className="text-base sm:text-lg md:text-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
+          <div className="text-base sm:text-lg md:text-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <StatCard title="Total Income" amount="₱16,500.00" />
-            <StatCard title="Total Expenses" amount="₱4,965.00" />
+            <StatCard title="Total Expenses" amount="₱4,965.00" /> 
+            <StatCard title="Total Savings" amount="₱3,200.00" />
           </div>
 
           {/* Income vs Expenses Chart */}
